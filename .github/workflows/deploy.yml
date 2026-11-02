@@ -1,4 +1,4 @@
-name: Deploy to GoDaddy
+name: Deploy Dashboard to GoDaddy
 
 on:
   push:
@@ -11,11 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Upload to GoDaddy via FTP
+      - name: Upload dashboard to GoDaddy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./site/
-          server-dir: /public_html/
+          server-dir: /public_html/dashboard/
