@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFK Outreach & Grant Pipeline - November 1, 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f6fa; color: #1a1a2e; padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+.header { margin-bottom: 28px; }
+.header h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.header p { font-size: 13px; color: #888; margin-top: 4px; }
+
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.kpi { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e8e8e8; text-align: center; transition: transform 0.15s, box-shadow 0.15s; }
+.kpi:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer; }
+.kpi-flash { animation: kpiFlash 1.2s ease; }
+@keyframes kpiFlash { 0%,100% { background: #fff; } 30% { background: #e3f2fd; } }
+.kpi .num { font-size: 32px; font-weight: 800; }
+.kpi .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+.kpi.blue .num { color: #2563eb; }
+.kpi.green .num { color: #16a34a; }
+.kpi.purple .num { color: #7c3aed; }
+.kpi.orange .num { color: #ea580c; }
+.kpi.red .num { color: #dc2626; }
+.kpi.teal .num { color: #0d9488; }
+
+.section { margin-bottom: 28px; }
+.section-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  padding: 10px 14px; background: #fff; border-radius: 10px;
+  border: 1px solid #e8e8e8; transition: background 0.15s;
+}
+.section-title:hover { background: #f8f9ff; }
+.section-title .toggle { font-size: 12px; color: #999; transition: transform 0.25s; display: inline-block; }
+.section-title .toggle.open { transform: rotate(90deg); }
+.section-title .count { font-size: 12px; font-weight: 500; color: #fff; background: #2563eb; border-radius: 10px; padding: 2px 8px; margin-left: auto; }
+
+.pipeline-bar { display: flex; border-radius: 8px; overflow: hidden; height: 28px; margin-bottom: 8px; }
+.pipeline-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; transition: all 0.3s; cursor: pointer; position: relative; min-width: 20px; }
+.pipeline-bar .seg:hover { opacity: 0.85; }
+.pipeline-bar .seg .tip { display: none; position: absolute; top: -34px; background: #1a1a2e; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 10; pointer-events: none; }
+.pipeline-bar .seg:hover .tip { display: block; }
+
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e8e8e8; }
+th { background: #1a1a2e; color: #fff; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; padding: 10px 12px; text-align: left; cursor: pointer; user-select: none; position: relative; transition: background 0.15s; }
+th:hover { background: #2a3a5e; }
+th .sort-arrow { font-size: 10px; margin-left: 4px; opacity: 0.4; }
+th .sort-arrow.active { opacity: 1; color: #e94560; }
+td { padding: 9px 12px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+tr.data-row { cursor: pointer; transition: background 0.12s; }
+tr.data-row:hover td { background: #f0f4ff; }
+
+.badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge-submitted { background: #dbeafe; color: #1d4ed8; }
+.badge-outreach { background: #fef3c7; color: #b45309; }
+.badge-response { background: #d1fae5; color: #065f46; }
+.badge-declined { background: #fee2e2; color: #991b1b; }
+.badge-prospect { background: #f3e8ff; color: #6b21a8; }
+.badge-hold { background: #f1f5f9; color: #475569; }
+.badge-review { background: #e0f2fe; color: #0369a1; }
+.badge-meeting { background: #ccfbf1; color: #115e59; }
+.badge-warm { background: #fef9c3; color: #854d0e; }
+.badge-deadline { background: #fecaca; color: #991b1b; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+
+.collapsible { overflow: hidden; transition: max-height 0.35s ease; }
+.collapsible.closed { max-height: 0 !important; }
+
+/* Sliding detail panel */
+.overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); z-index: 200; }
+.overlay.open { display: block; }
+.detail-panel { position: fixed; top: 0; right: 0; width: 520px; height: 100vh; background: #fff; z-index: 201; overflow-y: auto; box-shadow: -4px 0 20px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 0.2s; }
+.detail-panel.open { transform: translateX(0); }
+.detail-header { background: #1B2A4A; color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+.detail-header h2 { font-size: 16px; font-weight: 500; }
+.detail-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; padding: 4px 8px; }
+.detail-close:hover { opacity: 0.8; }
+.detail-body { padding: 20px; }
+.detail-field { margin-bottom: 14px; }
+.detail-field label { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 3px; font-weight: 600; }
+.detail-field .val { font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
+
+.footer { text-align: center; font-size: 11px; color: #aaa; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e8e8e8; }
+
+@media (max-width: 600px) {
+  .detail-panel { width: 100vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>No Forgotten Kids - Outreach & Grant Pipeline</h1>
+  <p>Snapshot as of November 1, 2026 | Prepared by Edie Scott, Executive Director</p>
+</div>
+
+<div class="kpi-row" id="kpiRow"></div>
+
+<div class="section">
+  <div class="section-title" onclick="toggleSection('partners')">
+    <span class="toggle open" id="partners-toggle">&#9654;</span>
+    Strategic Partners
+    <span class="count" id="partners-count"></span>
+  </div>
+  <div class="collapsible" id="partners-body" style="max-height:2000px;">
+    <div style="margin-top:4px;">
+      <table id="partnersTable"><thead><tr></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" onclick="toggleSection('grants')">
+    <span class="toggle open" id="grants-toggle">&#9654;</span>
+    Foundations &amp; Grants
+    <span class="count" id="grants-count"></span>
+  </div>
+  <div class="collapsible" id="grants-body" style="max-height:5000px;">
+    <div class="pipeline-bar" id="grantBar"></div>
+    <table id="grantTable"><thead><tr></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" onclick="toggleSection('pb')">
+    <span class="toggle open" id="pb-toggle">&#9654;</span>
+    PB Individual Donors
+    <span class="count" id="pb-count"></span>
+  </div>
+  <div class="collapsible" id="pb-body" style="max-height:5000px;">
+    <div class="pipeline-bar" id="pbBar"></div>
+    <table id="pbTable"><thead><tr></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" onclick="toggleSection('haitian')">
+    <span class="toggle open" id="haitian-toggle">&#9654;</span>
+    Haitian-Specific Partners
+    <span class="count" id="haitian-count"></span>
+  </div>
+  <div class="collapsible" id="haitian-body" style="max-height:5000px;">
+    <div class="pipeline-bar" id="haitianBar"></div>
+    <table id="haitianTable"><thead><tr></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title" onclick="toggleSection('cgi')">
+    <span class="toggle open" id="cgi-toggle">&#9654;</span>
+    CGI Funder Outreach
+    <span class="count" id="cgi-count"></span>
+  </div>
+  <div class="collapsible" id="cgi-body" style="max-height:5000px;">
+    <div class="pipeline-bar" id="cgiBar"></div>
+    <table id="cgiTable"><thead><tr></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+
+<div class="footer">
+  No Forgotten Kids | noforgottenkids.org | Confidential - for internal team use
+</div>
+
+<!-- Sliding detail panel -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-header">
+    <h2 id="panelTitle">Details</h2>
+    <button class="detail-close" onclick="closePanel()">&times;</button>
+  </div>
+  <div class="detail-body" id="panelBody"></div>
+</div>
+
+<script>
+var stageColors = {
+  "Deadline Approaching": "#dc2626",
+  "Application Submitted": "#2563eb",
+  "Under Review": "#0ea5e9",
+  "Awaiting Response": "#f59e0b",
+  "Initial Outreach": "#f59e0b",
+  "Outreach": "#f59e0b",
+  "Follow-up Needed": "#ea580c",
+  "Follow-up Sent": "#ea580c",
+  "Response Received": "#16a34a",
+  "Responded": "#16a34a",
+  "Responded -- Warm (Comm Dir called, referred to Ed Foundation)": "#16a34a",
+  "Responded -- Warm (called Edie, referred Matthew Papaycik)": "#16a34a",
+  "Meeting Scheduled": "#0d9488",
+  "Meeting Confirmed": "#059669",
+  "Coordinating Meeting Time": "#14b8a6",
+  "Meeting Completed": "#059669",
+  "Meeting Completed, Follow-up": "#059669",
+  "Meeting Completed - No Strong Interest": "#dc2626",
+  "Meeting Completed, No Follow-up": "#94a3b8",
+  "Active Partner": "#059669",
+  "Commitment to Action Partner": "#059669",
+  "Member": "#059669",
+  "Applied - Fellowship": "#2563eb",
+  "Not Selected": "#dc2626",
+  "Prospect": "#a78bfa",
+  "Prospect - World Tour": "#a78bfa",
+  "On Hold": "#94a3b8",
+  "Dropped": "#dc2626",
+  "Not Eligible": "#dc2626",
+  "Invitation Only": "#6366f1",
+  "Alternate Route Needed": "#ea580c",
+  "Missed Deadline": "#dc2626",
+  "Re-applying": "#0ea5e9",
+  "Almost Submitted": "#0ea5e9",
+  "Closed - Monitor Sept 2026": "#94a3b8",
+  "No Current Opps - Monitor": "#94a3b8",
+  "Outreach Sent": "#f59e0b",
+  "Connected": "#16a34a",
+  "Bounced": "#dc2626",
+  "Meeting Held": "#059669",
+  "Draft in Progress": "#0ea5e9",
+  "Call Held": "#0d9488",
+  "Awarded": "#16a34a"
+};
+
+function badgeClass(stage) {
+  var s = stage.toLowerCase();
+  if (s.indexOf("deadline") > -1) return "badge-deadline";
+  if (s.indexOf("almost submitted") > -1) return "badge-review";
+  if (s.indexOf("closed") > -1 || s.indexOf("no current") > -1 || s.indexOf("monitor") > -1) return "badge-hold";
+  if (s.indexOf("submitted") > -1 || s.indexOf("review") > -1 || s.indexOf("re-applying") > -1) return "badge-submitted";
+  if (s.indexOf("outreach") > -1 || s.indexOf("initial") > -1 || s.indexOf("awaiting") > -1 || s.indexOf("follow-up") > -1) return "badge-outreach";
+  if (s.indexOf("response") > -1 || s.indexOf("responded") > -1 || s.indexOf("warm") > -1) return "badge-response";
+  if (s.indexOf("bounced") > -1) return "badge-declined";
+  if (s.indexOf("not selected") > -1 || s.indexOf("declined") > -1 || s.indexOf("dropped") > -1 || s.indexOf("not eligible") > -1 || s.indexOf("missed") > -1 || s.indexOf("no strong interest") > -1) return "badge-declined";
+  if (s.indexOf("prospect") > -1) return "badge-prospect";
+  if (s.indexOf("hold") > -1 || s.indexOf("alternate") > -1) return "badge-hold";
+  if (s.indexOf("commitment") > -1 || s.indexOf("member") > -1 || s.indexOf("active partner") > -1) return "badge-meeting";
+  if (s.indexOf("draft in progress") > -1) return "badge-review";
+  if (s.indexOf("call held") > -1) return "badge-meeting";
+  if (s.indexOf("awarded") > -1) return "badge-response";
+  if (s.indexOf("applied") > -1 || s.indexOf("fellowship") > -1) return "badge-submitted";
+  if (s.indexOf("meeting") > -1 || s.indexOf("coordinating") > -1 || s.indexOf("completed") > -1) return "badge-meeting";
+  if (s.indexOf("invitation") > -1) return "badge-review";
+  if (s.indexOf("contacted") > -1) return "badge-warm";
+  return "badge-hold";
+}
+
+function getColor(stage) { return stageColors[stage] || "#94a3b8"; }
+
+// === DATA ===
+var grantApps = [
+
+  {name:"AWS Imagine Grant (Pathfinder)", status:"Not Selected", ask:"Up to $150K", submitted:"3/31/2026 (Pathfinder Grant)",
+   website:"awsimaginegrant@amazon.com",
+   description:"AWS for Nonprofits offers three IMAGINE Grants: Go Further Faster Award (cloud tech), Momentum to Modernize Award (infrastructure), Pathfinder - Generative AI Award.",
+   grantReqs:"Must be a nonprofit with 501(c) status. AWS Education Equity Initiative may be an alternative.",
+   appProcedures:"2026-2027 cycle. Grant packages: $50K-$200K financial support + up to $100K in AWS promotional credits. Application deadline June 5, 2026 (now passed).",
+   responseNotes:"3/31/26: Pathfinder Grant submitted. 8/2/26: Formal rejection received. Not invited to Round Two. 2026-2027 recipients announced Dec 2026. Resources offered: AWS Nonprofit Credit Program, Education Equity Initiative, AWS Nonprofit Technical Hub.",
+   followUp:"DECLINED 8/2/26 (formal). Reapply next cycle (Spring 2027). Explore: AWS Promotional Credits via TechSoup, Education Equity Initiative, AWS Cloud Credits for Research."},
+
+  {name:"Catholic Relief Services", status:"Awaiting Response", ask:"TBD", submitted:"3/27/2026",
+   website:"crs.org",
+   focus:"Education, Haiti, Community Development", tier:"Tier 1",
+   description:"$1.5B org, 70+ yrs in Haiti. Subsidiarity-aligned. USAID funding cut ~50-62% in 2025, self-financing model highly relevant. Frank emailed 3/27, Laura followed up 4/8, Denise replied 4/9 directing to partnership@crs.org.",
+   responseNotes:"4/9: Denise (Dev Ops) replied, send proposal to partnership@crs.org. 4/23: Proposal and cover email sent. 6/29/26: Follow-up email sent to partnership@crs.org referencing $240M US humanitarian aid to CRS including Haiti.",
+   followUp:"Await CRS partnership team response."},
+
+  {name:"Clinton Global Initiative", status:"Commitment to Action Partner", ask:"Varies", submitted:"4/22/2026",
+   website:"https://www.clintonfoundation.org/",
+   focus:"Haiti-specific education/community dev", tier:"Fit 3",
+   description:"Haiti-specific education/community dev. Partnership-based. Web form submitted at clintonfoundation.org/contact. CGI Haiti Action Network connection via Rebecca Lidon.",
+   appProcedures:"Partnership-based. Rolling.",
+   responseNotes:"SUBMITTED 4/22: Contact form submitted. 5/14/26: Invited to CGI Haiti Action Network call. 5/20/26: Rebecca Lidon (CGI Haiti Action Network) responded positively. Called Blueprint 'really interesting and aligned with our commitment to localization and community-based work.' Offered to discuss pathways to engagement. Meeting May 27, 2026. 6/29/26: Check-in email sent re: concept note status and next steps. Rebecca OOO until 6/30.",
+   followUp:"Await Rebecca's response after OOO ends 6/30. Follow up on concept note status."},
+
+  {name:"Davis Projects for Peace", status:"Prospect", ask:"$10,000", submitted:"-",
+   website:"https://www.davisprojectsforpeace.org/",
+   focus:"Requires US undergraduate sponsor", tier:"Fit 2",
+   description:"$10K Annual Student Projects. Requires US undergraduate sponsor.",
+   appProcedures:"Student-nominated. Annual deadline.",
+   responseNotes:"CONDITIONAL: Needs U.S. college student.",
+   followUp:"Recruit Haitian-American student for next cycle."},
+
+  {name:"DRK Foundation", status:"Not Selected", ask:"$100K-$500K", submitted:"2/13/2026; 2/25 submitted online application",
+   website:"https://www.drkfoundation.org/apply-for-funding/submit-an-application/",
+   focus:"High-Impact Scale", tier:"Tier 1",
+   responseNotes:"3/6: Application under consideration. 5/13/26: Rejected. Not moving to due diligence phase.",
+   followUp:"5/13/26: DRK rejected. Consider reapplying next cycle."},
+
+  {name:"Echoing Green", status:"Closed - Monitor Sept 2026", ask:"$50K-$150K", submitted:"2/13/2026",
+   website:"https://echoinggreen.org",
+   focus:"Social Innovation",
+   description:"Intensive 18-month fellowship program supporting bold leaders tackling systemic inequality.",
+   appProcedures:"2026 Fellowship Application closed. 2027 Fellowship: Will likely open in September 2026 with deadline around early-to-mid October 2026.",
+   responseNotes:"Fellowship opps closed. Applications closed.",
+   followUp:"Monitor website @ Sept 2026"},
+
+  {name:"Elevate Prize", status:"Not Selected", ask:"$100K", submitted:"4/14/2026",
+   appProcedures:"Nomination",
+   responseNotes:"4/14/26: Nominated Rev. Jose Jean-Pierre for 2027 Elevate Prize. 5/13/26: Nomination confirmed received. Record number of nominations, under review. 6/26/26: Rejection email from Alex Rosales (Senior Program Manager). Not invited to full application. Record nominations, pool was extraordinary, final invitation cohort intentionally smaller and more targeted. Not a reflection of the value of the work. Contact: Alex Rosales, Senior Program Manager — alex@elevateprize.org, M 1-305-216-7089, elevateprize.org.",
+   followUp:"Consider re-nominating for 2028 cycle (~April 2027). Stay connected with Alex Rosales. Monitor elevateprize.org for timeline."},
+
+  {name:"FAWCO Foundation", status:"Prospect", ask:"$5K-$15K", submitted:"-",
+   website:"https://www.fawcofoundation.org/programs/development-grants",
+   focus:"Classrooms/libraries for women & girls", tier:"Fit 3",
+   description:"Development Grants, Education (2027 cycle). Classrooms/libraries for women and girls. Apply as Lead Haiti. Requires 6-mo nominating club relationship.",
+   appProcedures:"Member-club nomination. Deadline Jan 27, 2027.",
+   responseNotes:"LOW PRIORITY: Needs FAWCO member club.",
+   followUp:"Identify FAWCO member-club connection in next 6 months."},
+
+  {name:"Ford Foundation", status:"No Current Opps - Monitor", ask:"$750K", submitted:"2/16/2026",
+   website:"https://www.fordfoundation.org",
+   focus:"Reducing inequality, social justice",
+   description:"Supports initiatives that reduce poverty and injustice, strengthen democratic values, promote international cooperation.",
+   grantReqs:"Does not accept unsolicited grant proposals by mail, email, or phone.",
+   appProcedures:"Submit a grant inquiry through online portal. Grant Size: $100K-$500K. https://www.fordfoundation.org/work/our-grants/idea-submission/",
+   responseNotes:"Currently no opps listed online.",
+   followUp:"Monitor website"},
+
+  {name:"Global Fund for Children", status:"Awaiting Response", ask:"$5K-$20K/yr (3-6 yr)", submitted:"4/21/2026",
+   website:"https://globalfundforchildren.org/",
+   focus:"Girls' ed, disability inclusion, Caribbean priority", tier:"Fit 5",
+   description:"Community Partner Grants. Long-term partnerships (3-6 year). Apply as Lead Haiti. Rolling decisions June and Dec.",
+   appProcedures:"Open, relationship-based. Rolling; decisions June and Dec.",
+   responseNotes:"SUBMITTED 4/21: EOI form completed on globalfundforchildren.org. GFC reviews on rolling basis. Expect 4-8 weeks for response. 6/29/26: Follow-up email sent to info@globalfundforchildren.org. June decision window is NOW - 10 weeks since submission.",
+   followUp:"Await GFC response - June decision cycle active."},
+
+  {name:"Global Innovation Fund", status:"Awaiting Response", ask:"$300K-$1.5M", submitted:"2/16/2026",
+   website:"https://globalinnovation.fund/apply-for-funding",
+   focus:"Scalable Innovation", tier:"Tier 1",
+   description:"Invests in social innovations aimed at improving lives in developing countries. Grants and risk capital for education, health, economic development.",
+   grantReqs:"Closed Jan 2025 until complete review of proposals. Staged funding approach: smaller bets on riskier, unproven innovations at pilot stage, larger amounts for innovations with strong evidence.",
+   responseNotes:"2/16/26: Please note we only accept applications submitted through the online application form on our website. (None on website currently). Our last application window closed on 15 January 2025. Our team is currently reviewing the proposals we received and planning next steps with the most promising applications. 6/29/26: Follow-up email sent to info@globalinnovation.fund. Auto-reply received: GIF only accepts online applications, emails will not be followed up on.",
+   followUp:"Monitor website for next application window. Email follow-up unlikely to reach a human."},
+
+  {name:"IDB AquaFund", status:"Alternate Route Needed", ask:"Varies (non-reimbursable)", submitted:"-",
+   website:"https://www.iadb.org/en/who-we-are/topics/water-and-sanitation/initiatives/aquafund",
+   focus:"Water catchment, sanitation blocks", tier:"Fit 4",
+   description:"Inter-American Development Bank Water and Sanitation. AquaFund is country-coordinated, not direct email.",
+   appProcedures:"Country-coordinated. Rolling. Contact form: iadb.org/en/who-we-are/country-offices/contact-us.",
+   responseNotes:"EMAILS BOUNCED (cca@ and aquafund@).",
+   followUp:"Use IDB contact form or reach Corinne Cathala (Country Rep) on LinkedIn."},
+
+  {name:"Inter-American Foundation (IAF)", status:"Paused", ask:"$25K-$400K", submitted:"-",
+   website:"https://iaf.gov/apply-for-grant/",
+   focus:"Haiti priority; community-led dev; ed/water/livelihoods", tier:"Fit 5",
+   description:"Community Development Grants. Federal US agency. 1-4 yr projects. French/Creole accepted. Concept note draft ready (IAF_Concept_Note_NFK.docx).",
+   appProcedures:"Open RFP via GovGrants. Rolling. Portal: iaf-grants.my.site.com. Contact: govgrants@iaf.gov or inquiries@iaf.gov.",
+   responseNotes:"PAUSED: IAF suspended grant funding per Executive Order on US Foreign Aid.",
+   followUp:"Monitor for reopening of grant funding"},
+
+  {name:"IRENA NewGen", status:"Missed Deadline", ask:"Mentorship + capacity", submitted:"-",
+   website:"https://fundsforcompanies.fundsforngos.org/training-and-mentorship/irena-newgen-renewable-energy-accelerator-cohort-2026/",
+   focus:"Solar energy for schools", tier:"Fit 3",
+   description:"2026 Cohort. Solar energy for schools. Apply as Lead Haiti (youth-led). Draft application ready (IRENA_NewGen_Application_NFK.docx). Nacheka Jean-Pierre as lead founder.",
+   appProcedures:"Open RFP. Apply as Lead Haiti (youth-led).",
+   responseNotes:"Youth-led requirement. APPLICATION DRAFTED. 4/30: Followed up with Jose. Deadline May 3, 2026. Missed.",
+   followUp:"Deadline was May 3. Missed. Watch for next cohort."},
+
+  {name:"KORE / Digicel Foundation", status:"Awarded", ask:"$5,000", submitted:"April 7, 2026",
+   focus:"Education, Solar Infrastructure",
+   description:"KORE grant for 2.4kW solar power system, LED lighting, and phone charging kiosk at Academie Lead Haiti.",
+   appProcedures:"Applied online April 7, 2026. Foundation requested additional details (photos, budget revision). All materials submitted.",
+   responseNotes:"5/13: Foundation asked for photos, charging cabinet details, revised budget. Section 4 removed per guidance. All requested materials sent. 6/30/26: Site visit completed. 9/17/26: KORE $5K grant AWARDED. Acceptance letter received. Digicel needs additional info from NFK/LH before disbursement.",
+   followUp:"Provide additional info requested by Digicel for KORE $5K disbursement. Coordinate with Jose on implementation. CGI HAN attendees (Sept 2026): Josefa Gauthier (Digicel Foundation), Sophia M. Stransky (Fondation Digicel)."},
+
+  {name:"KPC10 / Digicel Foundation ($12K)", status:"Not Selected", ask:"$12,000", submitted:"May 2026",
+   focus:"Education, Livelihoods, Revenue Interventions",
+   description:"Konbit Pou Chanjman $12K grant for integrated poultry and aquaculture farm: 500 broilers (4 cycles/yr), 125 laying hens for daily eggs to 200+ students, 1,000 tilapia from constructed pond, full-time farm manager. Year 1 projected revenue $4,800+.",
+   appProcedures:"Online application at konbitpouchanjman.com.",
+   responseNotes:"6/30/26: Selected as 1 of 45 organizations advancing to Phase 2 of KPC10. Digicel conducting field visits to evaluate. 10 of 45 will receive the $12K award. Site visit expected July 2026.",
+   followUp:"Prepare for Digicel site visit in July. Ensure campus ready for evaluation."},
+
+  {name:"KPC10 / Digicel Foundation (10M HTG)", status:"Not Selected", ask:"10,000,000 HTG (~$75K)", submitted:"May 19, 2026",
+   focus:"Water Distribution Center & Internet Cafe, Académie Lead Haiti",
+   description:"Konbit Pou Chanjman 10M HTG grand prize. Water purification/distribution center and internet cafe at Académie Lead Haiti, Milot. Budget: construction 1,780,970 HTG + equipment 8,207,076 HTG = 10,000,000 HTG.",
+   appProcedures:"Online application at konbitpouchanjman.com. Submitted May 19, 2026.",
+   responseNotes:"5/19/26: Application submitted online. Budget balanced to exactly 10,000,000 HTG. 6/30/26: Not selected as finalist for 10M gourdes grand prize.",
+   followUp:"N/A - not selected."},
+
+  {name:"LEGO Foundation", status:"Not Selected", ask:"$500K", submitted:"2/13/2026",
+   website:"www.legofoundation.com",
+   focus:"Education (Play-based learning)",
+   grantReqs:"Partnership approach required. Typical grants $500K-$10M+. Geographic focus: Denmark, Mexico, South Africa, Ukraine, but funds crisis settings globally.",
+   appProcedures:"Contact via website. Collaboration with existing grantees.",
+   responseNotes:"2/13: Depending on your query, it may take some time for us to respond to you. 2/27: Email saying not moving forward - This decision reflects our responsibility to focus our resources where we believe we can have the greatest long-term impact for children.",
+   followUp:""},
+
+  {name:"Lemelson Foundation", status:"Not Selected", ask:"$300K", submitted:"2/27/2026",
+   website:"https://www.lemelson.org",
+   description:"Supports inventors and entrepreneurs in developing countries to promote sustainable economic development.",
+   grantReqs:"Programs that support invention-based enterprises benefiting underserved communities.",
+   appProcedures:"Submit letter of inquiry through website. Rolling basis.",
+   responseNotes:"Sent inquiry via their general contact form. 3/13: Sent email to grantsmanagement@lemelson.org. DECLINED 4/21: outside current strategic priorities.",
+   followUp:"Closed, no further action"},
+
+  {name:"MacArthur Foundation", status:"Not Selected", ask:"$750K", submitted:"2/16/2026",
+   website:"https://www.macfound.org",
+   focus:"Innovation and Systems Change",
+   grantReqs:"Organizations with projects in human rights, education, and community development.",
+   appProcedures:"Submit letter of inquiry through website. https://macfound.fluxx.io/lois/new",
+   responseNotes:"2/20/2026: 'Although what you describe is interesting, it falls outside of our grantmaking and impact investing strategies.'",
+   followUp:""},
+
+  {name:"PNC / Grow Up Great", status:"Not Eligible", ask:"N/A", submitted:"-",
+   website:"pnc.com",
+   focus:"Early Childhood Education (US only)",
+   description:"Gave $510K to SOAFI. 'Grow Up Great' program funds birth-to-age-5 in U.S. PNC markets only. NFK programs in Haiti - not eligible. ~$65M annual grantmaking but US-only.",
+   grantReqs:"Programs must operate in a U.S. PNC market area. International not eligible. Birth-to-5 age focus.",
+   responseNotes:"Researched April 8, 2026 - determined ineligible.",
+   followUp:"Deprioritize; revisit only if another PNC program identified"},
+
+  {name:"Stavros Niarchos Foundation", status:"Not Selected", ask:"$50K-$1M+", submitted:"4/21/2026",
+   website:"https://www.snf.org/en/apply-now/",
+   focus:"134-country global ed mandate", tier:"Fit 4",
+   description:"Education Priority. 134-country global ed mandate. Apply as NFK. Cannot resubmit for 1 year. Rolling review.",
+   appProcedures:"Open portal. Rolling.",
+   responseNotes:"SUBMITTED 4/21: $500K grant request via SNF portal (application.snf.org). May 2026: Rejection email sent to Pastor Jose Jean-Pierre (on behalf of NFK). 6/29/26: Follow-up email sent to info@snf.org (grants@snf.org bounced) - note: already rejected.",
+   followUp:"Rejected May 2026. Consider reapplying next cycle. Correct email: info@snf.org."},
+
+  {name:"The Audacious Project", status:"Awaiting Response", ask:"TBD", submitted:"2/26/2026",
+   website:"https://audaciousproject.org/",
+   appProcedures:"Related to TedX. Email: audacious@ted.com",
+   responseNotes:"Submitted online application/inquiry. 6/29/26: Follow-up email sent to audacious@ted.com.",
+   followUp:"Await reply from Audacious/TED team."},
+
+  {name:"UBS Optimus Foundation", status:"Not Selected", ask:"$500K-$5M", submitted:"2/27/2026",
+   website:"www.ubs.com/optimus",
+   focus:"Education innovation, child welfare, health",
+   description:"UBS philanthropic foundation supporting education innovation and child welfare programs. Rigorous M&E requirement aligns with Blueprint approach.",
+   grantReqs:"Education innovation focus, rigorous monitoring and evaluation required.",
+   appProcedures:"Submit through UBS Optimus Foundation website. LOI process.",
+   responseNotes:"Submitted general inquiry. Website says 'not currently accepting unsolicited proposals. We occasionally issue requests for proposals based on specific initiatives.'",
+   followUp:"Check websites for RFPs"},
+
+  {name:"W.K. Kellogg Foundation", status:"Not Selected", ask:"$100K-$2M", submitted:"2/16/2026; 2/25 submitted online application",
+   website:"https://wkkf.org",
+   focus:"Children, families, communities",
+   description:"Supports children, families, and communities through: strong/equitable food systems, health equity, early care and education, job and employment equity.",
+   appProcedures:"Accepts applications via website year-round. Register at https://www.wkkf.org/grantseekers/#how-to-apply, log in to portal: https://wkkf.fluxx.io/",
+   responseNotes:"Success page at: https://wkkf.fluxx.io/loi_created",
+   followUp:"2/25: Submitted online application. 2/27: Received email 'LOI does not align with our priorities.' CGI HAN attendees (Sept 2026): Anastasia Ordonez, Dana Francois, Jenny Petrow, Liz Chan Leuthauser, Robb Gray."},
+
+  {name:"Zayed Sustainability Prize", status:"Not Selected", ask:"$25K per HS; all finalists funded", submitted:"June 2026",
+   website:"https://zayedsustainabilityprize.com/en/how-to-apply",
+   focus:"Water, solar, sustainability, schools as enterprise",
+   appProcedures:"Open application. Submitted before June 22, 2026 deadline.",
+   responseNotes:"All 2027 finalists receive funding. Application submitted. Built around three student-run revenue enterprises: water purification, solar expansion, integrated agriculture. Video from ALH included. Did not advance to semi-finalist round.",
+   followUp:"9/28/26: Not selected as semi-finalist."},
+
+  {name:"MIT Solve", status:"Applied", ask:"$100,000", submitted:"10/9/2026",
+   website:"https://solve.mit.edu",
+   focus:"Global learning, education innovation, technology",
+   description:"MIT Solve 2027 Global Challenges. Each Solver team receives $100K + network support. Additional sponsored prizes available (AI for Humanity $150K, Collegium $100K, Citizens $100K). 10 teams selected from 1,000+ applications across 110+ countries.",
+   appProcedures:"Online application at solve.mit.edu/challenges. Deadline: November 2, 2026.",
+   responseNotes:"10/9/26: Application completed and submitted by Edie.",
+   followUp:"Await selection notification. Solver teams announced at Solve Challenge Finals."},
+
+  {name:"Dudley T. Dougherty Foundation", status:"Applied", ask:"$10,000", submitted:"10/11/2026",
+   website:"https://www.dtdoughertyfoundation.org",
+   focus:"Education, international development",
+   description:"Private foundation supporting education, health, and community development. Online application with 4 tabs (Identity, Details, Files, Submit). $10K request for Kreyol learning materials.",
+   appProcedures:"Online application at dtdoughertyfoundation.org. Deadline: October 31, 2026.",
+   responseNotes:"10/11/26: Application submitted by Edie. Budget breakdown and Exec Summary 2 uploaded as supporting docs.",
+   followUp:"Await funding decision."}
+];
+
+var pbDonors = [
+
+  {name:"Amanda Schumacher", tier:"Tier 1", status:"Initial Outreach", notes:"Email sent 5/4 to info@treeoflifefi.org. Tree of Life Foundation International founder."},
+
+  {name:"Amy and Mike Kazma", tier:"Tier 2", status:"Initial Outreach", notes:"Kazma Family Foundation: scholarships (2000+ awarded in Chicago/South FL/Central America). Mike gives to Don Bosco Univ El Salvador. 4/20: LinkedIn message sent, not opened. Emailed 4/23 to mkazma@amzak.com. HIGH PRIORITY, Caribbean/LatAm education overlap. Pivot to Kazma Family Foundation via Mary Margaret Toole (CF Broward)."},
+
+  {name:"Andrew Vahab", tier:"Tier 1", status:"Follow-up Needed", notes:"Emailed 4/9 and 4/20. No reply as of 5/4. Skip additional follow-up for now."},
+
+  {name:"Aranyos Family", tier:"-", status:"On Hold", notes:"No info found. Verify through SOAFI."},
+
+  {name:"Bonnie McElveen-Hunter", tier:"Tier 1", status:"Initial Outreach", notes:"Email sent 5/4 to bonnie@paceco.com. Red Cross Chair, former Ambassador to Finland."},
+
+  {name:"Brenda Medore", tier:"Tier 2", status:"Awaiting Response", notes:""},
+
+  {name:"Christina & Benjamin Macfarland", tier:"Tier 2", status:"Initial Outreach", notes:"Storage Rentals of America. President's Circle $100K FAU Gala. Founded Palm Beach Philanthropy publication. CFPB relationship (Bonnie contact). HIGH PRIORITY. SENT: Outreach letter sent. Palm Beach Philanthropy is media vehicle, an NFK profile there = distribution AND donor intro."},
+
+  {name:"Christine E. Lynn / E.M. Lynn Foundation", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Platinum $25K. E.M. Lynn Foundation: $92M assets, ~$6M/yr in 97 grants. Healthcare + education in FL. Given Lynn University $7.5M+. Boca-focused."},
+
+  {name:"David Warne", tier:"Tier 2", status:"Initial Outreach", notes:"Email sent 4/8."},
+
+  {name:"Don Silpe", tier:"Tier 2", status:"On Hold", notes:"No direct email found."},
+
+  {name:"DPR Construction", tier:"Tier 2", status:"Initial Outreach", notes:"FAU Gala Gold $10K. DPR Foundation (est. 2008). $16M+ distributed. Under-resourced youth focus. International ops (Americas, Europe, Asia). UN Global Compact aligned. Net-zero offices. STRONG FIT: international + sustainability + youth + construction. Emailed 4/23 to dianes@dpr.com. Diane Shelton = Community Initiatives Manager and Foundation Director."},
+
+  {name:"Dr. Ava Parker", tier:"Tier 2", status:"Awaiting Response", notes:""},
+
+  {name:"Dr. Howard Green", tier:"Tier 2", status:"Dropped", notes:"Decided to skip 4/29."},
+
+  {name:"Fabiola Brumley", tier:"Tier 2", status:"On Hold", notes:"Both BofA emails bounced."},
+
+  {name:"George Elmore", tier:"Tier 1", status:"On Hold", notes:"NFK Fit: 5. $10.3M via Impact for Good. Approach via Marti."},
+
+  {name:"Gil Cohen", tier:"Tier 2", status:"Follow-up Sent", notes:"Email sent 4/8. Follow-up sent 5/4."},
+
+  {name:"Heidi Steiger", tier:"Tier 1", status:"Initial Outreach", notes:"Email bounced. Resend needed."},
+
+  {name:"Janet Levy", tier:"Tier 2", status:"Initial Outreach", notes:"Email sent 5/4 via pbrayofhope.org contact form. Palm Beach Ray of Hope founder."},
+
+  {name:"JM Family Enterprises", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Platinum $25K. Jim Moran Foundation. Three pillars: empowering families, education, environment. $100M to FSU for entrepreneurship school (2015)."},
+
+  {name:"Josephine Bayard", tier:"Tier 3", status:"Awaiting Response", notes:""},
+
+  {name:"Kathy and Paul Adkins", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Platinum $25K. Kathy: past President Impact 100 PBC (2019-2021); 25+ yrs Junior League Boca; Boca Helping Hands board (2024). HIGH PROMISE, route via Impact 100 PBC."},
+
+  {name:"Kaufman Lynn Construction", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Platinum $25K. Founder Michael Kaufman is VICE CHAIR of FAU Foundation Board (since 2005). Primary charity: George Snow Foundation scholarship program. KL Cares community initiative. Construction expertise + FAU board + scholarship focus."},
+
+  {name:"Kelly Smallridge", tier:"Tier 1", status:"Responded -- Warm (Comm Dir called, referred to Ed Foundation)", notes:"Referred to Matthew Papaycik."},
+
+  {name:"Kyle Paez", tier:"Tier 2", status:"Responded -- Warm (called Edie, referred Matthew Papaycik)", notes:"Warm response via phone."},
+
+  {name:"Marti LaTour", tier:"Tier 2", status:"Follow-up Sent", notes:"Email sent 4/8. No reply. Follow-up sent 5/4."},
+
+  {name:"Matthew Papaycik", tier:"Tier 2", status:"Follow-up Sent", notes:"Email sent 4/20 via Kyle Paez intro. Follow-up sent 5/4."},
+
+  {name:"Mitchell E. Rudin", tier:"Tier 1", status:"Follow-up Sent", notes:"LinkedIn viewed but no reply. Original email bounced. Direct email sent 5/4 to mitchr46@gmail.com."},
+
+  {name:"ModMed (Daniel and Debra Cane)", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Platinum $25K. CEO Daniel Cane + Debra Cane gave $1M to FAU High for Cane Institute for Advanced Technologies (STEM/AI/robotics). Former FAU Trustee VP. United Way PBC board. STEM ed focus."},
+
+  {name:"Mort Handel & Barbara Spiller", tier:"Unclassified", status:"On Hold", notes:"Identity not confirmed. Verify through SOAFI before drafting any outreach. On hold."},
+
+  {name:"Palm Beach State College", tier:"Tier 2", status:"Prospect", notes:"FAU Gala Gold $10K. PBSC Foundation (est. 1973). Stephen Ross $8M commitment. FGIC scholarships (first-gen students). $1.1B annual economic impact. Institutional partner potential."},
+
+  {name:"Patrick S. Cousins, Esq.", tier:"Tier 3", status:"Initial Outreach", notes:"Email sent 4/8."},
+
+  {name:"Paul Gervais", tier:"Tier 2", status:"On Hold", notes:"No direct email. Partner of Gil Cohen."},
+
+  {name:"Related Ross (Stephen M. Ross)", tier:"Tier 1", status:"Prospect", notes:"FAU Gala Platinum $25K. Related Companies $70B assets. Related Ross Foundation: $8.35M to Palm Beach State College, $1M to Roosevelt Elementary. Ross Foundation focused on historic NW WPB. ENORMOUS capacity."},
+
+  {name:"Robert & Ann Fromer", tier:"Tier 2", status:"On Hold", notes:"Skipped per Edie."},
+
+  {name:"SBA Communications (Stoops)", tier:"Tier 1", status:"Prospect", notes:"FAU Gala Platinum $25K. CEO Jeffrey Stoops. Stoops Family Foundation $20M+ to PBC nonprofits since 2013. STOOPS IS CURRENT BOARD CHAIR of Community Foundation Palm Beach and Martin Counties. DIRECT BRIDGE via Bonnie Mitchell."},
+
+  {name:"Siemens", tier:"Tier 1", status:"Initial Outreach", notes:"FAU Gala Gold $10K. Siemens Stiftung (intl foundation, est. 2008). STEM education in Africa and Latin America. 22K teachers trained, 1M students reached. UN SDG alignment. BEST PROSPECT ON FAU GALA LIST. Emailed 4/23 to barbara.filtzinger@siemens-stiftung.org (Head of Education, Latin America/Africa/Germany). Position Haiti as Latin America priority."},
+
+  {name:"Wayne and Lucretia Weiner", tier:"Tier 2", status:"Prospect", notes:"FAU Gala President's Circle $100K. Just founded FAU School of Environmental, Coastal and Ocean Sustainability. DAF at Community Foundation of Broward. Matching-gift pattern. HIGH PRIORITY, engage CFB directly. Angle: sustainability + youth."}
+];
+
+var foundations = [
+
+  {name:"Bill & Melinda Gates Foundation", status:"Initial Outreach", ask:"$1M",
+   website:"https://www.gatesfoundation.org/about/how-we-work/grant-opportunities", focus:"Global education, scale focus", tier:"Tier 1",
+   description:"Provides grants to improve global health and development, focusing on education, food security, nutrition, economic empowerment.",
+   grantReqs:"Open to registered NGOs with innovative solutions addressing critical global challenges.",
+   appProcedures:"Focus on building visibility through academic partners (e.g. RISE, J-PAL) who already have Gates relationships.",
+   responseNotes:"Email 2/16. 2/27: No applicable RFPs.",
+   followUp:"Research RISE and J-PAL"},
+
+  {name:"Bonnie Mitchell (CF PBC)", status:"Meeting Completed, No Follow-up", ask:"Gateway",
+   focus:"Grants Manager, Community Foundation for PBC and Martin Counties",
+   responseNotes:"Email sent 4/20/26. | 5/11/26: Corey Murphy (Senior Community Impact Officer, cmurphy@cfpbmc.org, 561-340-4519) responded. He and colleague Kara want to meet to discuss NFK and CF grantmaking. Proposed week of June 15. | 5/15/26: Meeting confirmed for June 16 (Master Plan Door #1). | Meeting held June 16, 2026.",
+   followUp:"Meeting completed June 16 with Corey Murphy + Kara Rodriguez. 8/22/26: Met again. Donors focus on PB County mainly. Key feedback: pitch the IMPACT. Gateway to Stoops, Elmore, Macfarland DAFs."},
+
+  {name:"Conrad N. Hilton Foundation", status:"Invitation Only", ask:"$500K-$5M",
+   website:"www.hiltonfoundation.org", focus:"Catholic education, vulnerable children, Haiti presence", tier:"Tier 2",
+   grantReqs:"Catholic education heritage beneficial. Haiti presence is strong alignment.",
+   responseNotes:"Invitation only. Frank has a contact.",
+   followUp:"Ask Frank to write his contact there."},
+
+  {name:"Corey Murphy, MPH (CF PBC)", status:"Meeting Completed, No Follow-up", ask:"Gateway",
+   focus:"Senior Community Impact Officer, Community Foundation for PBC and Martin Counties",
+   tier:"Master Plan Door #1",
+   website:"https://www.cfpbmc.org",
+   description:"Senior Community Impact Officer, Community Foundation for PBC & Martin Counties. Previously: Annie E. Casey Foundation (Program Officer), Philanthropy Tank (Program Director). Youth development and community investment focus. Identified by Bonnie Mitchell as the right CF contact. Highest-leverage meeting on the Master Plan; gateway to Stoops, Elmore, Macfarland DAFs.",
+   responseNotes:"5/11/26: Replied via Bonnie Mitchell intro. cmurphy@cfpbmc.org, 561.340.4519. Wants to meet to discuss NFK and CF grantmaking; bringing colleague Kara Rodriguez (Community Impact Officer, education background, Peru international experience). | 5/15/26: Meeting CONFIRMED for June 16 (PM). | Meeting held June 16, 2026.",
+   followUp:"Meeting completed June 16 with Kara Rodriguez also attending. Record outcomes, identify follow-up actions. CF PBC manages DAF grant program since 2004. Gateway to Stoops, Elmore, Macfarland DAFs."},
+
+  {name:"Dubai Cares", status:"Follow-up Sent", ask:"$500K-$3M",
+   website:"www.dubaicares.ae", focus:"Education (Scalable systems, ECD, primary ed, education in emergencies)", tier:"Tier 1",
+   description:"UAE-based international development org. Haiti IS on approved intervention country list. $346M milestone year. Education in Emergencies = 33% of portfolio.",
+   grantReqs:"Typical grants: $500K-$3M. Rolling applications. Preference for systemic vs project-based approaches.",
+   responseNotes:"LinkedIn w/ Dalal (Sr Mgr Partnerships) since 3/31. Email sent 4/20. 6/29/26: Follow-up email + LinkedIn message to Dalal after months of silence. Referenced $346M milestone, EiE focus, Haiti on approved list.",
+   followUp:"Await Dalal's response to 6/29 follow-up. Explore partnership application pathway."},
+
+  {name:"ELMA Caribbean Foundation", status:"Invitation Only", ask:"$500K",
+   website:"https://www.elmaphilanthropies.org/the-elma-caribbean-foundation", tier:"Tier 2",
+   responseNotes:"Invitation only.",
+   followUp:"Research"},
+
+  {name:"Haiti Dev. Institute (HDI)", status:"Initial Outreach", ask:"$10K-$50K",
+   website:"https://www.hdihaiti.org/", focus:"Haitian-led development intermediary", tier:"Fit 3",
+   description:"Grant Intermediary. Haitian-led development intermediary. Gateway to Boston/TBF funder network.",
+   appProcedures:"Relationship-based. Rolling.",
+   responseNotes:"SENT 4/21 to elizabeth.fischelis@tbf.org. Awaiting response.",
+   followUp:"Follow up with Elizabeth Fischelis at TBF"},
+
+  {name:"Jacobs Foundation", status:"Initial Outreach", ask:"$250K-$1.5M",
+   website:"https://jacobsfoundation.org", focus:"Child Development and Learning", tier:"Tier 1",
+   description:"Based in Zurich. Donated CHF 38M+ in 2022. Focus: EdTech, evidence-based learning, systems change.",
+   responseNotes:"",
+   followUp:"3/13: Sent LinkedIn messages to Fabio Segura and Gelgia Fetz Fernandes, Global Lead Learning and Evidence."},
+
+  {name:"Koch Foundation (Catholic)", status:"Skip", ask:"$10K-$50K",
+   website:"https://kochfoundation.org/", tier:"Fit 3",
+   description:"Religious Education. Catholic education infrastructure. Catholic alignment preferred.",
+   appProcedures:"Open. Rolling.",
+   responseNotes:"SKIP: No denominational connection.",
+   followUp:"Removed from active pipeline"},
+
+  {name:"Lilly Endowment", status:"Skip", ask:"$50K-$500K+",
+   website:"https://lillyendowment.org/", tier:"Fit 3",
+   description:"Indiana priority but funds globally. Faith-based capacity; global projects accepted.",
+   appProcedures:"Open, invitation-leaning. Rolling.",
+   responseNotes:"SKIP: Indiana/Indianapolis focused. International funding invitational only. Not a fit.",
+   followUp:"Removed from active pipeline"},
+
+  {name:"Lutheran Women's Missionary League (LWML)", status:"Skip", ask:"$50K-$100K",
+   website:"https://www.lwml.org/", tier:"Fit 3",
+   description:"Mission Grants. Precedent: Paul et Isabel Lutheran School Hinche. Requires LCMS sponsor.",
+   appProcedures:"Congregational nomination. Biennial.",
+   responseNotes:"SKIP: No denominational connection.",
+   followUp:"Removed from active pipeline"},
+
+  {name:"Maclellan Foundation", status:"Skip", ask:"$25K-$250K",
+   website:"https://maclellan.net/", tier:"Fit 3",
+   description:"Christian Ministries International. Christian education overseas. Faith-based alignment required.",
+   appProcedures:"Application. Rolling.",
+   responseNotes:"SKIP: Invitation only. Does not accept unsolicited proposals.",
+   followUp:"Removed from active pipeline"},
+
+  {name:"Mary Margaret Toole (CF Broward)", status:"Initial Outreach", ask:"Gateway",
+   focus:"Director of Philanthropic Services, Community Foundation of Broward",
+   responseNotes:"Email sent 4/21/26. No reply as of 5/4.",
+   followUp:"Gateway to Kazma Family Foundation DAF. CFB manages $500M+ in assets."},
+
+  {name:"Mulago Foundation", status:"Applied - Rainer Fellowship", ask:"$250K-$1M",
+   website:"https://mulagofoundation.org", focus:"Scale Philanthropy", tier:"Tier 1",
+   responseNotes:"2/17: Nomination window closed; added to review list. 7/26: Claire (PM) reached out — NFK referred (possibly from earlier inquiry) as possible fit for Rainer Fellowship ($200K grant, Morocco retreat June 2027). 8/22: Applied via Airtable form.",
+   followUp:"Awaiting response — if fit, they'll schedule a conversation. Follow up Sept if no reply."},
+
+  {name:"National Christian Foundation", status:"Skip", ask:"Varies",
+   website:"https://www.ncfgiving.com/", tier:"Fit 2",
+   description:"Donor-Advised Fund Pipeline. Faith-aligned donors give through NCF.",
+   appProcedures:"Via fundholders. Rolling.",
+   responseNotes:"NOT APPLICABLE: NCF is a donor mechanism only, not a place for nonprofits to register. Confirmed by phone 4/22.",
+   followUp:"Removed from active pipeline"},
+
+  {name:"Open Society Foundations", status:"Prospect", ask:"$500K",
+   website:"https://www.opensocietyfoundations.org", focus:"Education and Justice", tier:"Tier 1",
+   followUp:"Paused - no clear entry points."},
+
+  {name:"PADF", status:"Initial Outreach", ask:"$25K-$250K",
+   website:"https://www.padf.org/", focus:"Community resilience, education", tier:"Fit 4",
+   description:"Haiti Programs. Community resilience, education. Sub-grants from USAID/IADB. Often sub-contracts to local partners.",
+   appProcedures:"Sub-grants from USAID/IADB. Rolling.",
+   responseNotes:"SENT 4/21: Outreach letter to grants@padf.org",
+   followUp:"Follow up on grants@padf.org outreach"},
+
+  {name:"Rockefeller Foundation", status:"Initial Outreach", ask:"$500K",
+   website:"https://www.rockefellerfoundation.org", focus:"Resilience and Systems", tier:"Tier 1",
+   description:"Explicitly does not accept unsolicited proposals. They proactively identify partners.",
+   followUp:"Paused - no clear entry points."},
+
+  {name:"ServiceNow.org", status:"Initial Outreach", ask:"$100K + $250K services",
+   website:"https://servicenow.org", focus:"Digital Transformation", tier:"Tier 3",
+   description:"Partnership for Good Grant. Grants include free ServiceNow instance, software, licenses, and services up to $250K.",
+   responseNotes:"Sent inquiry via their general contact form.",
+   followUp:"Watch for 2026 cycle announcement - likely opens mid-2026."},
+
+  {name:"The Coca-Cola Foundation", status:"Invitation Only", ask:"$150K",
+   website:"https://www.coca-colacompany.com", tier:"Tier 3",
+   description:"Supports education, water and sanitation, health, and economic development in underserved communities.",
+   responseNotes:"Funding is invitation-only.",
+   followUp:""},
+
+  {name:"The Patterson Foundation", status:"Prospect", ask:"$50K-$250K",
+   website:"pattersonbelknap.com", focus:"Literacy, Education, Arts", tier:"Tier 1",
+   description:"James Patterson and Sue Patterson. Based in Palm Beach. Major national literacy and education philanthropists.",
+   grantReqs:"No formal grant cycle. Does not accept unsolicited proposals. Relationship/invitation only.",
+   responseNotes:"Email bounced.",
+   followUp:"Need correct email. Try jamespatterson.com contact form or reach via Palm Beach State College Foundation."},
+
+  {name:"The Starbucks Foundation", status:"Prospect", ask:"$150K",
+   website:"https://www.starbucks.com", tier:"Tier 3",
+   description:"Supports programs for youth, refugees, and coffee-growing communities.",
+   responseNotes:"Invitation only. No clear entry point.",
+   followUp:"Paused - no clear entry points."},
+
+  {name:"The Walmart Foundation", status:"Initial Outreach", ask:"TBD",
+   description:"Focuses on hunger relief, health, education, economic empowerment.",
+   responseNotes:"No current RFPs. Hard to find anything useful on site.",
+   followUp:"Paused - no clear entry points."},
+
+  {name:"UNFCU Foundation", status:"Closed - Monitor 2028", ask:"$100K",
+   website:"https://www.unfcufoundation.org/grants/", tier:"Tier 3",
+   description:"Supports projects empowering women and youth in developing countries. Key contacts: Yma Gordon (ED), Khalid Gherzeddine, Tanya Sukkari, David Gruss.",
+   grantReqs:"Must be U.S.-based 501(c)(3). Over 50% beneficiaries must be women or girls. 2027 cycle is invitation-only.",
+   responseNotes:"3/2: Submitted online application. 3/13: Emailed Gordon. 5/13/26: Reply received, 2027 cycle is invitation-only. 5/20/26: Rejected for 2027 cycle. Geographic priorities do not include Haiti. Encouraged to stay connected. FUTURE: Senegal is on UNFCU priority list AND a Blueprint expansion country. When NFK enters Senegal planning phase, reapply. Track for 2028+ open call.",
+   followUp:"FUTURE: When NFK enters Senegal planning phase, reapply. 2027 cycle is invitation-only. Track for 2028+ open call."},
+
+  {name:"William & Flora Hewlett Foundation", status:"Initial Outreach", ask:"$500K-$10M",
+   website:"https://hewlett.org", focus:"Quality education, evidence-based approaches", tier:"Tier 1",
+   followUp:"3/13: Emailed mdutt@hewlett.org"},
+
+  {name:"Light a Single Candle Foundation", status:"Not Selected", ask:"$50K-$75K",
+   website:"https://www.lightasinglecandle.net", focus:"Community Transformation, Education, Food Security, Haiti", tier:"Tier 1",
+   description:"Private foundation with Haiti as 1 of 7 priority countries. $350K+ in Haiti grants in 2024. Community Transformation category is near-perfect match for Blueprint model. Program Officer: Laura Lamb. Source: Candid Premium search.",
+   grantReqs:"Online portal application via Foundant. Community Transformation category. Monthly review for smaller proposals, quarterly for larger.",
+   appProcedures:"Apply via portal at lightasinglecandle.net. Account created July 2026.",
+   responseNotes:"7/10/26: LOI submitted via online portal. 8/6/26: DECLINED - unable to invite proposal at this time.",
+   followUp:"Declined 8/6/2026. Consider reapplying next cycle if appropriate."},
+
+  {name:"W O'Neil Foundation", status:"LOI Ready", ask:"$25K-$50K",
+   website:"https://woneilfoundation.org", focus:"Poverty relief, Haiti, faith-motivated giving", tier:"Tier 1",
+   description:"Cleveland-based private foundation. ~$1.2M annual disbursements. $55K to Haitian Health Foundation (Jeremie) in recent years. President: Helene O'Neil Shere. Faith-motivated, 'help the poor help themselves.' No formal application process. Source: Candid Premium search.",
+   grantReqs:"No formal requirements. LOI by email.",
+   appProcedures:"Email LOI to woneilfoundation@wonf.org. No deadline, no form required.",
+   responseNotes:"",
+   followUp:"Send email LOI via Outlook. No deadline pressure. Frame around faith-motivated poverty relief, self-sufficiency."},
+
+  {name:"Wayne Eisenbaum Charitable Foundation", status:"LOI Ready", ask:"$15K-$25K",
+   focus:"Haiti, international development", tier:"Tier 1",
+   description:"Small private foundation in Old Saybrook, CT. Wayne Eisenbaum sole officer/chairman. ~$260-300K annual disbursements. ~$20K/year recurring grants to Haiti organizations. No email, no website. Mail only. Source: Candid Premium search.",
+   grantReqs:"No formal requirements found. Physical letter LOI.",
+   appProcedures:"Mail physical letter to Old Saybrook, CT address (confirm from 990PF filing).",
+   responseNotes:"",
+   followUp:"Confirm mailing address from 990PF. Print and mail LOI letter."},
+
+  {name:"Mary Lynn Richardson Fund", status:"LOI Ready", ask:"$8K-$10K",
+   focus:"Foreign missions, community development", tier:"Tier 2",
+   description:"Greensboro, NC fund. 50% foreign missions focus. Median grant $8.8K. Trustees: Anne H Wagoner, Betsy Boney Mead, Britt A Preyer, Patricia S Agnew, Matthew Lem. PO Box 20124, Greensboro, NC 27420. Phone: (336) 274-5471. Source: Candid Premium search.",
+   grantReqs:"Written proposal with IRS exemption letter.",
+   appProcedures:"Mail written proposal + IRS determination letter to PO Box 20124, Greensboro, NC 27420.",
+   responseNotes:"",
+   followUp:"Print LOI + IRS determination letter. Mail to PO Box. DEADLINE: August 31, 2026."},
+
+  {name:"Atlassian Foundation", status:"Applied", ask:"$350K",
+   focus:"Education Technology / Nonprofit Capacity", tier:"Tier 1",
+   description:"Applied Oct 2026. Coalition model application with Lead Haiti, Summits Education, and HELP. Focus on education technology, nonprofit capacity building, and scalable school model in Haiti.",
+   responseNotes:"Oct 2026: Application submitted via portal. Coalition approach with multiple Haiti education partners.",
+   followUp:"Await Atlassian Foundation response."},
+
+  {name:"TEEEM Foundation", status:"Draft in Progress", ask:"TBD",
+   focus:"Community Impact / Education", tier:"Tier 2",
+   description:"Community Impact Grant. Application drafted Oct 2026, not yet submitted.",
+   responseNotes:"Oct 2026: Draft application prepared.",
+   followUp:"Edie to review and submit TEEEM application."},
+
+  {name:"100x Impact Accelerator", status:"Draft in Progress", ask:"TBD",
+   focus:"Education / Social Enterprise", tier:"Tier 2",
+   description:"Impact accelerator program. Application drafted Oct 2026, not yet submitted.",
+   responseNotes:"Oct 2026: Draft application prepared.",
+   followUp:"Edie to review and submit 100x application."},
+
+  {name:"Dalai Lama Fellows", status:"Draft in Progress", ask:"Fellowship",
+   focus:"Leadership / Social Change", tier:"Tier 2",
+   description:"Leadership fellowship program. Application drafted for Jose, not yet submitted.",
+   responseNotes:"Oct 2026: Application drafted for Jose.",
+   followUp:"Edie to review and submit Dalai Lama Fellows application for Jose."}
+];
+
+var haitianPartners = [
+
+  {name:"AFD Civil Society Desk", status:"Initial Outreach", type:"Multilateral", location:"Paris",
+   description:"Agence Francaise de Developpement. Civil Society Desk.",
+   responseNotes:"4/22/26: Emailed site@afd.fr. 5/28/26: Follow-up sent. Connected via Lea Rambaud/GCE France 5/19.",
+   followUp:"Await response. Leverage Lea Rambaud connection if no reply."},
+
+  {name:"Alina Eneji / Driko Ducasse", status:"Meeting Completed, Follow-up", type:"Partnership", location:"Haiti / Chicago",
+   description:"Haiti's first mesh-grid solar developer. 5,000+ households connected in Nord/Artibonite using Okra Solar tech. GEAPP-funded via Off-Grid Electricity Fund. Driko is Haitian-American, Chicago Booth MBA '21, FAMU BS Finance '14. Frank Shooster also studied at UChicago (public policy).",
+   responseNotes:"6/22/26: Email sent from Outlook. 6/23/26: Driko REPLIED — meeting set Mon 6/29. 6/29/26: MEETING COMPLETED (Zoom). Edie presented NFK, 78 interventions, POC in Milot. Driko explained mesh grid model (hub+spokes, Okra Solar tech, 60m diameter, pay-as-you-go). Has acquaintance from Milot. 6/29/26: THANK-YOU EMAIL SENT with energy needs table (30 computers, kitchen, security lighting, charging station, water ATM, sewing program, chicken/aquaculture), $20,035 solar quote reference.",
+   followUp:"Await Driko's response on mesh grid feasibility for ALH campus. Follow up by 7/7/26."},
+
+  {name:"Angie Bell (Mayor, Cap-Haïtien)", status:"Initial Outreach", type:"Government Partner", location:"Cap-Haïtien, Haiti",
+   description:"Mayor (President of Municipal Commission) of Cap-Haïtien, Haiti's second-largest city (~700K pop). Haitian-American. Appointed Aug 2025, serving until municipal elections Aug 2026. Also Vice-Rector and Dean of Business at Université des Atlantes in Cap-Haïtien. Co-hosts Ayiti Parle on Island TV (Miami). Founder of PouBèlAyiti, turning waste into art while educating communities on recycling. Frank and Jose have met her in person. Cap-Haïtien is nearest major city to NFK's Milot campus. Triple value: municipal government + higher education + media platform.",
+   responseNotes:"5/19/26: Edie sent introductory message. Frank Shooster and Jose Jean-Pierre previously met Mayor Bell in person.",
+   followUp:"Await response; explore municipal partnership for Milot campus support and community engagement"},
+
+  {name:"Association Viv Ansanm", status:"Prospect", type:"Diaspora Org", location:"Paris",
+   followUp:"Second-wave; engage through Collectif Haiti"},
+
+  {name:"Ayiti Community Trust (ACT)", status:"Initial Outreach", type:"Diaspora Fund", location:"Miami",
+   responseNotes:"4/21/26: Email sent. 5/28: Auto-reply — Amber Kamilah left ACT. New contacts: Gloria Blaise (gloria@ayiticommunitytrust.org, comms) and Alyssa Jean (a.jean@ayiticommunitytrust.org, general). Resent outreach to Alyssa Jean 5/28.",
+   followUp:"Follow up with Alyssa Jean in 1-2 weeks if no response. Explore hosting named NFK/ALH fund."},
+
+  {name:"Broward County Haitian American Community Center", status:"Prospect", type:"Partnership", location:"Broward County",
+   responseNotes:"No email found. Phone: 954-925-0418.",
+   followUp:"Call to introduce NFK before sending letter"},
+
+  {name:"Carole Coupez / Solidarité Laïque", status:"Meeting Completed - No Strong Interest", type:"NGO/Education", location:"Paris",
+   description:"General Delegate of Solidarité Laïque. Strong presence in Haiti on education for 25+ years (funded by AFD). Leader of Coalition Éducation France. President of Educasol. Led school reconstruction in southern Haiti after Hurricane Matthew (Timoun Retounen Lekol project). Direct operational experience in Haiti education.",
+   responseNotes:"5/19/26: Contact provided by Léa Rambaud (GCE-France) via GCE-US network.",
+   followUp:"Draft intro email; natural ally with Haiti education operations. Connect for Frank's Paris trip (IAFOR PCE Jun 16)"},
+
+  {name:"Carrefour Jeunesse-Emploi de la Cote-des-Neiges", status:"Prospect", type:"Network", location:"Montreal",
+   description:"Connected to Haitian youth and family networks in Montreal. Identified by Frank as organizational entry point for Montreal diaspora engagement.",
+   followUp:"Research; engage after Maison d\'Haiti connection established"},
+
+  {name:"CGI Haiti Action Network / Rebecca Lidon", status:"Commitment to Action Partner", type:"Network/Convener", location:"National",
+   website:"clintonfoundation.org",
+   description:"Clinton Global Initiative Haiti Action Network. Rebecca Lidon is key contact. Open call for organizations working in Haiti development. Edie invited to participate. Connected via Clinton Foundation contact form submitted 4/22/2026. Digicel Foundation precedent: Denis O'Brien built 174 schools in Haiti through CGI commitments ($13M+).",
+   responseNotes:"5/14/26: Invited to CGI Haiti Action Network call. 5/20/26: Rebecca Lidon responded positively. Called Blueprint 'really interesting and aligned with our commitment to localization and community-based work.' Offered to discuss pathways to engagement. Meeting May 27, 2026. 6/29/26: Check-in email sent re: concept note status. Rebecca OOO until 6/30.",
+   followUp:"8/22/26: NFK accepted as CGI Commitment to Action Partner. Follow up on next steps with Rebecca. 9/21/26: 75 confirmed attendees for HAN meeting added to Haitian-Specific Partners section."},
+
+  {name:"Charles Tardieu", status:"Prospect", type:"Connector", location:"New York",
+   followUp:"Second-wave outreach via NY networks"},
+
+  {name:"Collectif Haiti de France", status:"Initial Outreach", type:"Diaspora Org", location:"Paris",
+   responseNotes:"4/21/2026: Email sent to contact@collectif-haiti.fr.",
+   followUp:"Contact current directors; propose co-hosted event"},
+
+  {name:"Color of Hope", status:"Initial Outreach", type:"Partnership", location:"Lake Worth, FL",
+   website:"colorofhope.org",
+   description:"Grassroots org in Lake Worth strengthening Haiti and Haitian-Americans through community organizing, advocacy, education.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26. Email sent 4/20/26.",
+   followUp:"Send partnership letter"},
+
+  {name:"Comite de Solidarite avec Haiti", status:"Prospect", type:"Diaspora Org", location:"Paris",
+   description:"Solidarity-oriented organization that opens doors to French left-leaning funders. Identified by Frank as organizational entry point for Paris diaspora engagement.",
+   followUp:"Research; engage through Collectif Haiti de France"},
+
+  {name:"Diocese of Palm Beach", status:"Initial Outreach", type:"Partnership", location:"Palm Beach County",
+   website:"diocesepb.org",
+   description:"5 parishes celebrate Mass in Kreyol. Saint Ann Haitian Center WPB hosts School of Christian Formation Mondays. Major community anchor.",
+   responseNotes:"Initial partnership outreach submitted via website contact form 4/9/26.",
+   followUp:"High-value community anchor; contact Diocese Haitian Ministry office"},
+
+  {name:"Diocese of Palm Beach (Haitian Ministry)", status:"Initial Outreach", type:"Partnership", location:"Palm Beach County",
+   description:"5 parishes celebrate Mass in Kreyol. Saint Ann Haitian Center WPB. Major community anchor.",
+   responseNotes:"4/21/2026: Email sent to danridore@diocesepb.org.",
+   followUp:"High-value community anchor; contact Diocese Haitian Ministry office"},
+
+  {name:"Dr. Cary Kebe", status:"Prospect", type:"Connector", location:"Montreal",
+   followUp:"Outreach after Villefranche/Benjamin connections"},
+
+  {name:"Dr. Rudolph Moise", status:"Awaiting Response", type:"Partnership", location:"Miami",
+   description:"HIGH-VALUE CONTACT. Haitian-born physician-entrepreneur-veteran. Born in Port-au-Prince, emigrated to Chicago at 17. DO from Chicago College of Osteopathic Medicine + MBA and JD from University of Miami. Opened one-room storefront clinic in North Miami in 1985, now Comprehensive Health Center. NOTE: Now running for US Congress FL-24 — same race as Jean Monestime. Be mindful of optics.",
+   responseNotes:"4/30/26: Messaged, no response. Running for US Congress FL-24 (Frederica Wilson retiring).",
+   followUp:"Send follow-up message; explore alternate warm connection. Be mindful of optics re: Monestime race."},
+
+  {name:"Ellen Powers", status:"Meeting Completed, Follow-up", type:"Connector", location:"Fort Lauderdale",
+   description:"Met for lunch 6/2/26. Advised focus on 1-2 revenue-generating interventions at a time, prove they work before scaling. Offered to accompany Edie to Haiti. Referred CRUDEM Foundation (hospital in Milot). Reached out to her Cross International contact on NFK's behalf.",
+   responseNotes:"5/27/26: Meeting confirmed. 6/2/26: Lunch meeting in Fort Lauderdale. Endorsed model. Offered Haiti trip. Referred CRUDEM Foundation. Contacted Cross International on NFK's behalf, awaiting response.",
+   followUp:"Send thank-you. Follow up on Cross International intro. Research CRUDEM Foundation / Hopital Sacre Coeur partnership. Plan Haiti trip together."},
+
+  {name:"Emilio Imbrogno", status:"Prospect", type:"Corporate Philanthropy", location:"Toronto",
+   followUp:"Second-wave; corporate philanthropy angle"},
+
+  {name:"Emmanuel Eugene", status:"Prospect", type:"Connector (Boston)", location:"Boston",
+   followUp:"Second-wave; Boston community event potential"},
+
+  {name:"FANM (Fanm Ayisyen Nan Miyami)", status:"Initial Outreach", type:"Diaspora Org", location:"Miami",
+   responseNotes:"4/21/26: Email sent to afrancois@fanm.org. 5/28/26: Follow-up sent. No response yet.",
+   followUp:"Await response. If no reply by 6/11, try alternate contact at FANM. Co-host parlor meeting."},
+
+  {name:"FEDHE (Federation de la Diaspora Haitienne d'Europe)", status:"Follow-up Sent", type:"Diaspora Org", location:"Europe",
+   responseNotes:"6/15/26: Email sent from Outlook to contact.fedhe@gmail.com. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"FOCIH (Foundation to Change the Image of Haiti)", status:"Bounced", type:"Diaspora Org", location:"National",
+   description:"Jean-Mary Gedeon, founder.",
+   responseNotes:"6/15/26: Emails to jmgedeon@focih.org AND info@focih.org both BOUNCED (undeliverable). Email drafted but could not be sent.",
+   followUp:"Find alternate email or social media contact for Jean-Mary Gedeon."},
+
+  {name:"Fondation de France (Haiti program)", status:"Responded — Soft Decline", type:"Foundation", location:"Paris",
+   responseNotes:"4/21/26: Email sent to donateurs@fdf.org. 6/23/26: FDF ticket #1188891. Katty (projets@fdf.org) replied. FDF calls for projects currently support mainly France-based initiatives. Redirected to FDF directory of HOSTED FOUNDATIONS (some fund international/abroad).",
+   followUp:"Low priority. Optional: search FDF hosted-foundations directory for a Haiti/education-focused foundation."},
+
+  {name:"Fondation du Grand Montreal", status:"Initial Outreach", type:"Foundation", location:"Montreal",
+   responseNotes:"4/21/2026: Email sent to info@fgmtl.org.",
+   followUp:"Research donor-advised fund options"},
+
+  {name:"Fondation Michaelle Jean", status:"Initial Outreach", type:"Foundation", location:"Ottawa/Montreal",
+   responseNotes:"Michaelle Jean office redirected here (info@fmjf.ca). 4/22/26: Email sent to secretariat@michaellejean.ca. 5/28/26: Edie sent follow-up. Awaiting response from Foundation.",
+   followUp:"Email info@fmjf.ca with intro. Pathway to Michaelle Jean."},
+
+  {name:"France Volontaires", status:"Prospect", type:"Network", location:"Paris",
+   description:"Government-adjacent volunteer coordination body with connections to AFD and French development funding. Pathway to French institutional money.",
+   followUp:"Research; engage during Paris trip alongside AFD meeting"},
+
+  {name:"Frantz Benjamin", status:"Prospect", type:"Connector (Montreal)", location:"Montreal",
+   followUp:"Contact for civic/business introductions in Montreal"},
+
+  {name:"French Embassy in Haiti (SCAC)", status:"Initial Outreach", type:"Embassy", location:"Port-au-Prince",
+   description:"PISCCA and AFD real opportunities via ALH as lead applicant. Ambassador: Antoine Michon.",
+   responseNotes:"6/22/26: PISCCA inquiry email SENT from Outlook to cad.port-au-prince-amba@diplomatie.gouv.fr.",
+   followUp:"Await SCAC reply. Monitor for next PISCCA cycle."},
+
+  {name:"Fritz Alphonse Jean", status:"Prospect", type:"Connector", location:"Paris",
+   followUp:"Research connections; outreach for Paris event"},
+
+  {name:"Gaskov Clerge Foundation (GCF)", status:"Initial Outreach", type:"Foundation", location:"Haiti",
+   website:"gaskov.org",
+   responseNotes:"4/21/2026: Email sent to info@gaskov.org.",
+   followUp:"Strong Haiti education focus"},
+
+  {name:"Georges Sassine", status:"Follow-up Sent", type:"Connector", location:"Miami/DC",
+   responseNotes:"6/15/26: WC outreach email SENT from Outlook to administration@adih.ht and adih.director@gmail.com. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"Good Samaritan Foundation", status:"Meeting Completed", type:"Partnership", location:"Palm Beach County",
+   website:"goodsamaritanofhaiti.com",
+   description:"Palm Springs FL (Palm Beach County). ~20 years operating. 501(c)(3) with two schools: Ile a Vache (~375 students) and near Petit Goave (~375 students). ~750 students total. 100% BDS exam pass rate for 7+ consecutive years. MENFP Operating Permit received Feb 2026. Cost per student ~$750/yr all-in.",
+   responseNotes:"Mandy Thody, Administrative Director since 2013. 4/20/26: Replied enthusiastically - shared data: 20 years in, 100% BDS pass rate 7+ yrs, ~750 students, $750/student/yr. Said 'Would be glad to know more and what exact systems you are using.'",
+   followUp:"Meeting completed May 5, 2026. Follow up on partnership exploration and next steps."},
+
+  {name:"Green Family Foundation Trust", status:"Prospect", type:"Foundation", location:"Coral Gables, FL",
+   description:"EIN 83-2810565. Kimberly Green (Distribution Trustee), Steven J. Green (General Trustee). $15.8M assets, $1.6M giving (2024). Avg award ~$100K. Funds PRODEV Haiti, Haitian Education & Leadership Program, Project Medishare, PAMM Caribbean Cultural Institute. Website: greenff.org. NOTE: Original Inc entity (EIN 65-0284913) wound down 2020, assets transferred to Trust.",
+   responseNotes:"Oct 2026: CORRECTED from wrong foundation (greenfamilyfoundation.org = Philadelphia). Active RFP on Instrumentl, deadline Mar 31, 2027. No public application portal on greenff.org. Likely relationship-based. Phone: (305) 858-4225. LOI drafted Oct 2026, not yet submitted. Outreach letter drafted to Kimberly Green.",
+   followUp:"Submit Green Family Foundation LOI. Send outreach letter to Kimberly Green."},
+
+  {name:"H.E. Jakaya Kikwete / JMK Foundation", status:"Initial Outreach", type:"Government/Multilateral", location:"Tanzania",
+   description:"GPE Board Chair since September 2021. Former President of Tanzania (2005-2015). Edie angle: Peace Corps Burundi 1992-1993, evacuated to Tanzania. Aquaculture connection to Blueprint interventions.",
+   responseNotes:"6/29/26: OUTREACH LETTER SENT to info@jmkfoundation.org. Subject: 'Burundi Peace Corps evacuee to Tanzania, now leading No Forgotten Kids.' Highlighted Blueprint model ($194/$342/$148), GPE replication potential, Multiply Possibility/UNGA timing, possible CGI annual event attendance.",
+   followUp:"Await response from JMK Foundation."},
+
+  {name:"HAAMCC (Chamber of Commerce)", status:"Initial Outreach", type:"Partnership", location:"Broward County",
+   website:"haamcc.com",
+   description:"Strategically manages Haitian interests locally and internationally for economic stability. Oakland Park/Broward County.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26.",
+   followUp:"Send partnership template letter"},
+
+  {name:"HADC Broward", status:"Initial Outreach", type:"Partnership", location:"Broward County",
+   website:"hadcbroward.org",
+   description:"Political empowerment and voter registration for Haitian-American community. Tamarac, FL. Founded 1990. Lower priority.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26.",
+   followUp:"Lower priority; send partnership letter if bandwidth allows"},
+
+  {name:"Haiti Partners Inc.", status:"Initial Outreach", type:"Partnership", location:"Delray Beach, FL",
+   website:"haitipartners.org",
+   description:"Mission: Help Haitians change Haiti through education. Delray Beach FL. Co-Director John Engle: john@haitipartners.org.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26. Email sent 4/20/26.",
+   followUp:"Send partnership letter; John Engle is key contact"},
+
+  {name:"Haitian American Caucus (HAC-US) / Samuel Darguin", status:"Awaiting Response", type:"Network", location:"South Florida",
+   description:"HAC-US is a global community development nonprofit based in Brooklyn, NY. Mission: provide Haitian communities worldwide with access to information and resources for self-development. Focus: education, healthcare, economic development. Identified by Frank as key organizational entry point for Miami diaspora engagement.",
+   responseNotes:"5/4/26: Samuel missed scheduled call. Follow-up email sent, no reply as of 5/4.",
+   followUp:"Research leadership; outreach for network access and introductions."},
+
+  {name:"Haitian American Community Development Corporation (HACDC)", status:"Initial Outreach", type:"Diaspora Org", location:"Miami",
+   description:"Georges Sassine listed as contact. Community development focus. Potential connector to diaspora business community. Address: 8400 NE 2nd Ave, 2nd Flr, Miami FL 33138. Phone: (305) 759-2542.",
+   responseNotes:"3 emails sent to info@haitianamericancdc.org late April. ALL UNDELIVERABLE. Email may be invalid.",
+   followUp:"Contact via Georges Sassine. Need alternate email or phone."},
+
+  {name:"Haitian American Foundation (HAF)", status:"Follow-up Sent", type:"Diaspora Org", location:"Miami",
+   responseNotes:"6/15/26: WC outreach email SENT from Outlook. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"Haitian Americans United (HAU)", status:"Follow-up Sent", type:"Diaspora Org", location:"Boston",
+   responseNotes:"6/15/26: WC outreach email SENT from Outlook. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"Haitian Community Foundation of South Florida", status:"Prospect", type:"Diaspora Fund", location:"Miami",
+   description:"Organized donor-advised fund infrastructure. Can host a named fund for Blueprint/ALH. Identified by Frank as key Miami diaspora giving vehicle.",
+   followUp:"Contact leadership; explore hosting named NFK/ALH fund"},
+
+  {name:"Haitian Cultural Alliance", status:"Prospect", type:"Diaspora Org", location:"New York",
+   followUp:"Second-wave; explore NY event co-hosting"},
+
+  {name:"Haitian Internet Chamber", status:"Initial Outreach", type:"Partnership", location:"West Palm Beach",
+   website:"haitianicc.com",
+   description:"Empowers Haitian businesses through internet networking, business promotions, and education. West Palm Beach.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26.",
+   followUp:"Send partnership template letter"},
+
+  {name:"HANA of Florida / Cindy Lespinasse", status:"Coordinating Meeting Time", type:"Partnership", location:"South Florida",
+   website:"hanaofflorida.org",
+   description:"Professional membership org promoting health and welfare of Florida and international communities.",
+   responseNotes:"4/20/26: Cindy Lespinasse (Secretary, HANAF) replied, offered to meet. 4/30: Coordinating meeting time. 5/4: Back and forth twice. Awaiting meeting time from Cindy.",
+   followUp:"Schedule meeting with Cindy Lespinasse, MSN, APRN (Secretary)"},
+
+  {name:"Hands Together for Haitians", status:"Initial Outreach", type:"Partnership", location:"Palm Beach County",
+   website:"handstogetherforhaitians.org",
+   description:"Serves Haitian immigrant population in Palm Beach County (education, healthcare, language barriers) AND builds sustainable programs in Haiti. Contact: Nancy Anderson.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26. Email sent 4/20/26.",
+   followUp:"Email Nancy Anderson; request 20-min call about shared Haiti mission"},
+
+  {name:"HAPC (Professionals Coalition)", status:"Initial Outreach", type:"Partnership", location:"South Florida",
+   website:"hapcoalition.org",
+   description:"Mobilizes Haitian-American professionals; addresses health, legal, academic, and socio-economic issues. Founded 2001.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26.",
+   followUp:"Send partnership template letter"},
+
+  {name:"Hope for Haiti / Skyler Badenoch", status:"Meeting Completed, Follow-up", type:"Partnership", location:"Naples, FL",
+   website:"hopeforhaiti.com",
+   description:"CEO of Hope for Haiti (501(c)(3), founded 1989). HQ: Naples, FL. Skyler based in Scottsdale, AZ. BA Economics (U of Arizona), MA International Development Studies (GWU). RPCV Cote d'Ivoire 2001-2002. CGI Haiti Action Network confirmed attendees (Sept 2026): Melinda Miles, Skyler Badenoch.",
+   responseNotes:"5/1/2026: Introductory email sent via warm intro from Nicole Kennan. 5/5/2026: Meeting with Skyler. Discussed SWOT analysis, rebranding, $25K role play, concept pieces, digital cash payments, HFH business loan program. 5/11/2026: Thank you letter sent with executive summary attached. 9/28/26: Edie messaged Melinda Miles post-HAN Working Session.",
+   followUp:"Continue HAN partnership conversation with Melinda Miles."},
+
+  {name:"Hopeful Hearts 4 Haiti", status:"Initial Outreach", type:"Partnership", location:"Cap-Haitien, Haiti",
+   website:"hopefulhearts4haiti.org",
+   description:"Founded by 4 Haitian women. Works with Lycee de Jeunes Filles du Cap-Haitien (all-girls school near NFK's Milot POC). 400 students engaged (2023).",
+   responseNotes:"Initial partnership outreach submitted via website contact form 4/9/26.",
+   followUp:"Contact via website form; explore partnership given Cap-Haitien proximity to Milot"},
+
+  {name:"Inspirit Foundation", status:"Initial Outreach", type:"Grant ($25K-$100K)", location:"Toronto",
+   description:"Canadian non-profit promoting inclusion and pluralism. Up to 30 grants/year: seed grants ($10K) to multi-year organizational grants (up to $100K/year).",
+   responseNotes:"Email sent 4/20/26.",
+   followUp:"Research grant requirements"},
+
+  {name:"Jean Eddy Saint Paul", status:"Responded", type:"Convener", location:"New York",
+   description:"EXCELLENT ACADEMIC CONNECTOR. Founding Director of CUNY Haitian Studies Institute at Brooklyn College (est. 2016). Professor of Sociology. First Haitian to earn PhD from El Colegio de Mexico.",
+   responseNotes:"4/20/26: Replied kindly, referred Edie to Marie Cerat, current Chair of Haitian Studies at CUNY Brooklyn College (marie.cerat@brooklyn.cuny.edu).",
+   followUp:"Academic/intellectual legitimacy + donor circle access"},
+
+  {name:"Jean Monestime", status:"Meeting Completed", type:"Diaspora Convener", location:"Miami",
+   description:"FORMER Miami-Dade Commissioner District 2 (2010-2022); first Haitian-American Commissioner and first to chair the Commission (2015). LEFT OFFICE Nov 2022 due to term limits. Now Sr. Business & Government Consultant, JEMO Realty/JEMO Enterprises. Deep Miami-Dade political/business/real estate network. DOOR #3 from Master Plan: parlor dinner convener target. MAJOR: Running for US Congress FL-24 (Frederica Wilson retiring).",
+   responseNotes:"4/21/26: LinkedIn message sent. 4/22: Viewed profile. 5/26: Meeting confirmed. 6/2/26: MEETING HELD (~30 min). Brought friend 'Louis' (last name TBD). Strong relationship warmth. Endorsed Blueprint model (community ownership, vocational training, Kreyol-first). No financial commitment. Offered to accompany Edie to Haiti. Running for US Congress FL-24.",
+   followUp:"Gift + dinner asks paused until after Aug 18 primary. Keep engaged as advisor. Lock in Haiti trip offer. Confirm Louis full name."},
+
+  {name:"Josaphat Joe Celestin", status:"Initial Outreach", type:"Diaspora Convener", location:"Miami",
+   responseNotes:"Contacted per prior outreach. No email/phone found for direct follow-up.",
+   followUp:"Research connections; outreach after Bastien/Monestime meetings. Need contact info."},
+
+  {name:"Joseph Nhan-O'Reilly / IPNEd", status:"Prospect", type:"NGO/Policy", location:"London",
+   description:"Executive Director & Co-Founder, International Parliamentary Network for Education (IPNEd). Former Save the Children education lead (10+ yrs). Inaugural chair of GPE Strategy & Policy Committee. Design team for Education Cannot Wait. UK National Commission for UNESCO. Network spans parliamentarians in 68+ countries. Co-founded IPNEd with former UK MP Stephen Twigg (now Sec-Gen, Commonwealth Parliamentary Association).",
+   responseNotes:"5/19/26: Contact provided by Léa Rambaud (GCE-France) via GCE-US network.",
+   followUp:"Draft intro email; HIGH VALUE - GPE/ECW/UNESCO connections could open multilateral doors for NFK"},
+
+  {name:"KOP Mentoring / Ron Allen", status:"Coordinating Meeting Time", type:"Partnership", location:"Delray Beach, FL",
+   website:"kopmn.org",
+   description:"Youth mentoring and social services in Delray Beach. Also collects supplies for Haiti.",
+   responseNotes:"4/9/26: Initial outreach. 4/20/26: Ron Allen replied, offered to meet. 4/30: Coordinating meeting time. 5/4: Reached out twice, awaiting a time to meet.",
+   followUp:"Schedule meeting with Ron Allen"},
+
+  {name:"Léa Rambaud / GCE France", status:"Initial Outreach", type:"Connector", location:"Paris",
+   description:"Global Campaign for Education - France. Giulia McPherson's counterpart at GCE-France (Coalition Éducation France). Offered to introduce NFK to education-focused orgs in Paris. Will be in Bonn during PCE2026 but can facilitate introductions remotely. Has now provided 4 contacts: Sophie Peterman (London), Joseph Nhan-O'Reilly (London), Carole Coupez (Paris), Mathieu Moriamez (Paris).",
+   responseNotes:"5/14/26: Intro from Giulia. Edie sent brief reply. Second email requesting Haitian diaspora connections for Frank's Paris trip (PCE2026, June 15-18). 5/19/26: Léa provided 4 education contacts in London and Paris.",
+   followUp:"Follow up on remaining introductions; coordinate Paris meetings for Frank's trip"},
+
+  {name:"Maison d'Haiti (Montreal)", status:"Initial Outreach", type:"Diaspora Org", location:"Montreal",
+   website:"mhaiti.org",
+   responseNotes:"4/21/2026: Email sent to dg@mhaiti.org (sent twice).",
+   followUp:"Contact Marjorie Villefranche to co-host event"},
+
+  {name:"Marie Cerat (CUNY)", status:"Initial Outreach", type:"Academic", location:"New York",
+   description:"Current Chair of Haitian Studies at CUNY Brooklyn College. Referred by Dr. Jean Eddy Saint Paul.",
+   responseNotes:"4/20/26: Emailed introduction via Saint Paul referral.",
+   followUp:"Follow up on response"},
+
+  {name:"Marjorie Villefranche", status:"Initial Outreach", type:"Diaspora Convener", location:"Montreal",
+   responseNotes:"4/20/26: Email sent to dg@mhaiti.org (Director General). No response yet.",
+   followUp:"Contact for co-hosted public lecture + private donor reception"},
+
+  {name:"Marleine Bastien", status:"Initial Outreach", type:"Diaspora Convener", location:"Miami",
+   description:"NOW A MIAMI-DADE COUNTY COMMISSIONER (District 2, elected Nov 2022). Founded FANM in 1991; stepped down as FANM Exec Director Dec 2024. Licensed Clinical Social Worker (FIU). 40+ years advocacy for equity, immigration reform, climate justice. Plans to seek re-election 2026.",
+   responseNotes:"4/21/26: Email sent via Outlook to mbastien@fanm.org. 5/28/26: Follow-up sent. No response yet.",
+   followUp:"Await response. If no reply by 6/11, try alternate route (warm connector). Her FANM successor may be better co-host for parlor meeting."},
+
+  {name:"Mathieu Moriamez / Coordination SUD", status:"Initial Outreach", type:"NGO/Platform", location:"Paris",
+   description:"Deputy Director General, Coordination SUD. Platform gathering 170+ French international solidarity CSOs. Oversees humanitarian, agriculture, and youth commissions. Connector role: can introduce NFK to French NGOs active in Haiti.",
+   responseNotes:"5/19/26: Contact provided by Léa Rambaud (GCE-France). Edie sent intro email May 19.",
+   followUp:"Await response; coordinate meeting during Frank's Paris trip (IAFOR PCE Jun 16)"},
+
+  {name:"McConnell Foundation", status:"Portal Closed", type:"Foundation (Canada)", location:"Canada",
+   website:"mcconnellfoundation.ca",
+   description:"Major private Canadian foundation. Focus areas: Communities, Reconciliation, Climate. Funds collaborative action addressing barriers to social/economic inclusion, policy change for social justice, community-led regeneration. Separate Montreal stream (~$2M/year for Montreal-based orgs).",
+   responseNotes:"Email sent 4/20/2026. | 4/27: Replied. Communities portal closed due to high volume. Will reopen later in 2026. Monitor website or sign up for mailing list.",
+   followUp:"Monitor for portal reopening later in 2026. Sign up for mailing list at mcconnellfoundation.ca."},
+
+  {name:"Miami Foundation", status:"Member", type:"Community Foundation", location:"Miami",
+   responseNotes:"6/15/26: WC outreach email SENT from Outlook (DAF vehicle inquiry). 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"Michaelle Jean (Office)", status:"Responded", type:"Redirect", location:"Ottawa/Montreal",
+   responseNotes:"Office replied: domestic mandate only. Redirected to Fondation at info@fmjf.ca. 5/28/26: Edie sent follow-up thanking Secretariat for clarifying correct email and priorities.",
+   followUp:"Contact Fondation at info@fmjf.ca"},
+
+  {name:"NHAEON", status:"Follow-up Sent", type:"Network", location:"National",
+   description:"National Haitian American Elected Officials Network.",
+   responseNotes:"6/15/26: WC outreach email SENT from Outlook. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"P4H Global (Partners for Haiti Global)", status:"Initial Outreach", type:"Partnership", location:"National",
+   responseNotes:"4/9/26: Email sent. 6/5/26: Called, left voicemail. No response yet.",
+   followUp:"Try alternate contact method."},
+
+  {name:"Pierre Elliott Trudeau Foundation", status:"Prospect", type:"Foundation (Canada)", location:"Canada",
+   followUp:"Lower priority; explore after McConnell/Inspirit"},
+
+  {name:"PRODEV Foundation (Prodev USA Inc.)", status:"Follow-up Sent", type:"Partnership", location:"Haiti",
+   website:"prodevhaiti.org",
+   description:"Haitian-led development intermediary. Peer outreach, not grant application.",
+   responseNotes:"5/27/26: Introductory email sent to info@prodevhaiti.org. 7/5/26: Follow-up email sent from Outlook.",
+   followUp:"Follow up if no response by 7/19."},
+
+  {name:"Regine Abraham", status:"Prospect", type:"Connector (Paris)", location:"Paris",
+   followUp:"Research; outreach for Paris event introductions"},
+
+  {name:"Regroupement Education Pour Toutes et Tous (REPT) / William Thelusmond", status:"Meeting Completed, Follow-up", type:"Advocacy/Coalition", location:"Haiti",
+   description:"William Thelusmond is Executive Director. National education advocacy coalition funded through Education Out Loud (EOL) via GPE — potential pathway to GPE funds. Role: national curriculum framing, inclusion, gender, advocacy for public/private schools.",
+   responseNotes:"6/14/26: Emailed. Replied same day. 6/19/26: 1-hour meeting with Thelusmond + 2 staff. Edie presented hub-and-spoke model with education + revenue interventions. REPT interested in piloting and studying the model. Noted potential MENFP authorization needs. Agreed to share whitepaper. 6/20/26: Clarification email sent (to William and Maxaint) re: funding pathways and MENFP timing. 6/29/26: Follow-up email sent re: whitepaper decision and how to proceed.",
+   followUp:"Await William's response on how to proceed with whitepaper/funding discussion."},
+
+  {name:"Reseau Entrepreneurs Haitiens en France", status:"Prospect", type:"Diaspora Network", location:"Paris",
+   followUp:"Engage for major gift prospects at Paris event"},
+
+  {name:"Sant La Haitian Center", status:"Initial Outreach", type:"Partnership", location:"Miami",
+   website:"santla.org",
+   description:"Empowers Haitian-American community of South Florida. Education and community development focus.",
+   responseNotes:"Initial partnership outreach email sent 4/9/26. Email sent 4/20/26. Follow-up email sent.",
+   followUp:"Send partnership template letter"},
+
+  {name:"Sophie Peterman / Send My Friend to School", status:"Prospect", type:"NGO/Advocacy", location:"London",
+   description:"Campaign Manager, Send My Friend to School (GCE-UK coalition). UK coalition of INGOs, charities, teachers unions campaigning for every child's right to quality education. ~500K young people participate annually. Engages UK Parliament via APPG on Global Education.",
+   responseNotes:"5/19/26: Contact provided by Léa Rambaud (GCE-France) via GCE-US network.",
+   followUp:"Draft intro email; connect to Frank for London meetings"},
+
+  {name:"TCRI (Quebec refugee services network)", status:"Prospect", type:"Network", location:"Montreal",
+   description:"Table de concertation des organismes au service des personnes refugiees. Policy network that opens doors to Quebec government funders.",
+   followUp:"Research; engage for Quebec government funder introductions"},
+
+  {name:"United Haitian Baptist Church (UHBC)", status:"Prospect", type:"Partnership", location:"South Florida",
+   responseNotes:"Website broken as of 4/9/26, cannot submit contact form.",
+   followUp:"Community anchor; introduce NFK through church leadership"},
+
+  {name:"Will Prosper", status:"Prospect", type:"Connector", location:"Montreal",
+   followUp:"Engage after Villefranche connection established"},
+
+  {name:"Abundance Foundation / Stephen Kahn", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Stephen Kahn, M.D."},
+
+  {name:"All Hands & Hearts / Nate Mook", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Disaster response and school rebuilding. Contact: Nate Mook."},
+
+  {name:"American Jewish World Service (AJWS)", status:"Member", type:"HAN Member", location:"New York",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). International development and human rights. Contact: Amber Lynn Munger."},
+
+  {name:"Ansara Family Fund / NEID", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Karen Ansara."},
+
+  {name:"Aspen Institute - Level Ground", status:"Member", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Timothy D. Cross."},
+
+  {name:"Ban Ki-moon Foundation", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Founded by former UN Secretary-General. Contact: Kate Landon."},
+
+  {name:"BPI / Gretel Truong", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Gretel Truong."},
+
+  {name:"Build Health International", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Healthcare infrastructure. Contact: Andy Wilson."},
+
+  {name:"Caribbean Craft / Magalie Dresse", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Haitian artisan enterprise. Contact: Magalie Dresse."},
+
+  {name:"Center for Disaster Philanthropy", status:"Member", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Tracy O\'Heir."},
+
+  {name:"Church World Service", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Humanitarian aid and development. Contact: Joel Malebranche."},
+
+  {name:"CMMB (Catholic Medical Mission Board)", status:"Member", type:"HAN Member", location:"New York",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Global health organization. Contact: Angeline Martyn."},
+
+  {name:"Elms College / Dr. Harry Dumay", status:"Member", type:"HAN Member", location:"Massachusetts",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Dr. Harry Dumay."},
+
+  {name:"Communicorp / Maria Mulcahy", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Maria Mulcahy."},
+
+  {name:"CORE (Community Organized Relief Effort)", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Disaster relief and community development. Contacts: Hanne Eggen Roislien (Affiliate), Jerome Lebleu."},
+
+  {name:"Ecolog International / Christelle Delenclos", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Christelle Delenclos."},
+
+  {name:"Emerson Collective / Marc Sepama", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Laurene Powell Jobs\' impact org. Contact: Marc Sepama."},
+
+  {name:"FOKAL (Fondation Connaissance et Liberte)", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Haitian knowledge and civil society foundation. Contacts: Mie Edmonde Jeune, Elizabeth."},
+
+  {name:"GECA Foundation / Marie Beatrice Duret", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Marie Beatrice Duret."},
+
+  {name:"Global Sae-A Group / Lon Garwood", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Lon Garwood."},
+
+  {name:"GlobalGiving / Amelia Hoover", status:"Member", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Global crowdfunding platform for nonprofits. Contact: Amelia Hoover."},
+
+  {name:"Gwoup Konbit / Louino Robillard", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Louino Robillard."},
+
+  {name:"Haiti Outreach", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Community-led development. Contacts: Ceallaigh Smart, Saurel Quettan."},
+
+  {name:"Haiti STEM Alliance / Raygine Francois", status:"Outreach Sent", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). STEM education in Haiti, placing laptops and tablets directly in students' hands. Founded by Raygine Francois (15 years in Haiti, boots on the ground). Father Medard Laz is advisory board member and key supporter. Contacts: Raygine Francois, Father Medard Laz.",
+   responseNotes:"Father Medard Laz: Retired Catholic priest (ordained 1969, Archdiocese of Chicago). Founded Holy Family Parish in Inverness, IL (1984). Based in South Florida, serves in Archdiocese of Miami and Diocese of Palm Beach. Co-founded Rainbows (1982), a school support program for children in single-parent/blended families (2M+ children in 15 countries). Founded Joyful Again! (widows/widowers program). Author of 9 books. Built village in Thomazeau, Haiti and fishing villages in Fond des Blanc and Petit Goave through Food for the Poor. Has partnered with Raygine for 7+ years, providing laptops, tablets, generators and financial resources. Strong advocate for inquiry-based learning over rote memorization. Also connected to Children Heritage Foundation (tCHF). 9/28/26: Edie emailed Raygine Francois and Father Medard Laz post-HAN Working Session.",
+   followUp:"Await response. Strong alignment: education + technology + Haiti. Father Laz is South Florida-based (Miami/Palm Beach). Potential ally and connector."},
+
+  {name:"HELP (Haitian Education & Leadership Program)", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Higher education scholarships and leadership. Contacts: Caroline Bernal-Silva, Conor Bohan, Garry Delice."},
+
+  {name:"Health Equity International / Conor Shapiro", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Healthcare access. Contact: Conor Shapiro."},
+
+  {name:"Hearts for Humanity / Medard Laz", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Medard Laz."},
+
+  {name:"Heifer International / Marcio Nascimento", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Livestock and agriculture development. Contact: Marcio Nascimento."},
+
+  {name:"Hopital Albert Schweitzer (HAN)", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Major hospital in Artibonite Valley. Contacts: Jessica Laguerre, Stephanie Astic, Wilmar Mondestin."},
+
+  {name:"KANPE Foundation", status:"Member", type:"HAN Member", location:"Montreal / Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Haitian self-sufficiency and community development. Contacts: Christopher Crooker, Jennifer Brown."},
+
+  {name:"Longer Tables Fund", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contacts: Anna Liang, Ines Andres.",
+   followUp:"Edie emailed Cassandra at Summits. Edie messaged Rob at Accesso. Share Blueprint numbers with Anna."},
+
+  {name:"Montica / Erika L. Binger", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Erika L. Binger."},
+
+  {name:"Norwegian Refugee Council", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Humanitarian aid. Contact: Allison Perry."},
+
+  {name:"Partners In Health", status:"Member", type:"HAN Member", location:"Haiti / Boston",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Major healthcare org in Haiti (Zanmi Lasante). Contacts: Angela Letizia, Lesley King."},
+
+  {name:"Porticus North America / Michael Berino", status:"Outreach Sent", type:"HAN Member", location:"New York",
+   website:"porticus.com",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Catholic philanthropy network and major funder in Haiti. Contact: Michael Berino.",
+   responseNotes:"9/28/26: Edie messaged Michael Berino post-HAN Working Session.",
+   followUp:"Await response. Potential funding partner."},
+
+  {name:"Q-Q Research Consultants / Sandra Williams", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Sandra Williams."},
+
+  {name:"Refugees International / Hardin Lang", status:"Member", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Refugee advocacy. Contact: Hardin Lang."},
+
+  {name:"RNDDH (Reseau National de Defense de Droits Humains)", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Human rights network. Contact: Pierre Esperance."},
+
+  {name:"Roots of Development", status:"Member", type:"HAN Member", location:"Haiti / DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Community-driven development. Contacts: Jessica Hsu, Charlie Estes, Chad Bissonnette."},
+
+  {name:"Saint Rock Haiti Foundation", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contacts: Jessica Borges, Jocelyn Bresnahan."},
+
+  {name:"Smallholder Farmers Alliance / Hugh Locke", status:"Member", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Agroforestry and smallholder farming. Contact: Hugh Locke."},
+
+  {name:"Social Impact Research Collective", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Alexandra Morgan-Kisarale."},
+
+  {name:"SELF (Solar Electric Light Fund)", status:"Meeting Held", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Solar energy for developing communities. Contact: Bob Freling.",
+   responseNotes:"9/28/26: Edie messaged Bob Freling post-HAN Working Session. Two meetings held. Bob awaiting solar needs assessment from Jose/LH.",
+   followUp:"Jose/LH to provide solar needs assessment to Bob Freling."},
+
+  {name:"Soles4Souls / Mike Shirey", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Shoe distribution and micro-enterprise. Contact: Mike Shirey."},
+
+  {name:"Summits Education", status:"Connected", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Education in Haiti. Contacts: Cassandre Chipps Regnier, Regine Zamor.",
+   responseNotes:"9/28/26: Edie connected with two Summits Education reps post-HAN Working Session.",
+   followUp:"Continue partnership conversation."},
+
+  {name:"SOIL (Sustainable Organic Integrated Livelihoods)", status:"Outreach Sent", type:"HAN Member", location:"Haiti",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Ecological sanitation. Contact: Sasha Kramer.",
+   responseNotes:"9/28/26: Edie reached out to Sasha Kramer post-HAN Working Session.",
+   followUp:"Await response."},
+
+  {name:"Center for Mind-Body Medicine", status:"Member", type:"HAN Member", location:"Washington DC",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Mental health and trauma healing. Contacts: James S. Gordon, Randi Mitev."},
+
+  {name:"The Dalton Foundation / Haiti Health Network", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Barbara Campbell."},
+
+  {name:"The Liz Blake Giving Fund", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contacts: Joanne Maislin, Elizabeth K Blake."},
+
+  {name:"UNSPOKEN SMILES / Jean Paul Laurent", status:"Member", type:"HAN Member", location:"National",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Contact: Jean Paul Laurent."},
+
+  {name:"Vitol Foundation / Shikha Goyal", status:"Member", type:"HAN Member", location:"International",
+   description:"CGI Haiti Action Network confirmed attendee (Sept 2026). Energy sector philanthropy. Contact: Shikha Goyal."}
+];
+
+var strategicPartners = [
+
+  {name:"Escuela Nueva Foundation", contact:"Laura Maria Vega (Head of Community Connections & Training); Vicky Colbert (Founder/ED); Clarita Arboleda (COO)", status:"Outreach Sent",
+   description:"Education methodology / pedagogical partner. Colombian multi-grade active learning model used in 20+ countries. Aligns with Blueprint pedagogy. HQ: Calle 39 No 21-57, Bogota, Colombia. Phone: +57 601-743-2216. No DR office exists (entire team Bogota-based). Laura Vega: Ed.D. International Educational Development, Columbia University. 6/11/26: Partnership inquiry email sent to vcolbert@escuelanueva.org and carboleda@escuelanueva.org. 7/6/26: Follow-up email sent, no response. 7/13/26: Spoke with school, directed to Laura Vega. Emailed lvega@escuelanueva.org directly. Follow up by 7/27."},
+
+  {name:"Food For The Poor (FFTP)", contact:"Kevin Mayne", status:"Active Partner",
+   description:"Major international relief organization. Met several times. FFTP Haiti staff visited Milot school twice to assess needs. Strong potential to co-raise funds and cross-promote. Key infrastructure and logistics partner."},
+
+  {name:"MENFP (Haiti Ministry of Education)", contact:"Government", status:"Active Partner",
+   description:"Official government operating permit granted Feb 2026. Students achieved 100% pass rate on national BDS exam. Curriculum oversight and school accreditation."},
+
+  {name:"Accesso / Rob Johnson", status:"Prospect", type:"HAN Member", location:"National",
+   description:"HAN partner. Rob Johnson connected via Ines Andres at Longer Tables Fund. Edie sent LinkedIn message.",
+   followUp:"Follow up on LinkedIn message to Rob."},
+
+  {name:"NewGen Peacebuilders", contact:"Patricia Shafer (Executive Director)", status:"Connected", website:"newgenpeace.org",
+   description:"International nonprofit focused on peace education, leadership development, and conflict resolution. Programs in 12 US states and 18 countries. Patricia Shafer is also Senior Fellow for Peace Education at Alliance for Peacebuilding, Global Ambassador with Institute for Economics & Peace, and Rotary Peace Fellow. Nominated for UNESCO prize for girls' and women's literacy. Recipient of 2022 Melanie Greenberg Award for Excellence in US Conflict Resolution & Peacebuilding. Based in Charlotte, NC.",
+   responseNotes:"9/28/26: Edie met Patricia Shafer at CGI and gave her a Blueprint. Potential partnership around peace education and youth leadership development. 9/28/26: Edie messaged Patricia on LinkedIn.",
+   followUp:"9/28/26: Messaged on LinkedIn. Await response."}
+];
+
+var cgiContacts = [
+  {name:"Heather Gerken", org:"Ford Foundation", email:"h.gerken@fordfoundation.org", category:"Foundations & Philanthropy", confidence:"Inferred", status:"Bounced", notes:"Email bounced. Inferred format: f.last@fordfoundation.org. Need alternate route."},
+  {name:"Charlotte Tweedley", org:"Rockefeller Foundation", email:"ctweedley@rockfound.org", category:"Foundations & Philanthropy", confidence:"Inferred", status:"Outreach Sent", notes:"Inferred format: flast@rockfound.org, 84% of staff."},
+  {name:"Rey Ramsey", org:"Nathan Cummings Foundation", email:"rey.ramsey@nathancummings.org", category:"Foundations & Philanthropy", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Jamie Merisotis", org:"Lumina Foundation", email:"jmerisotis@luminafoundation.org", category:"Foundations & Philanthropy", confidence:"Confirmed", status:"Declined", notes:"10/9/26: Dominique Raymond replied on behalf. NFK falls outside Lumina areas of focus. Unable to make introductions."},
+  {name:"Janiece Evans-Page", org:"Tides Foundation", email:"info@tides.org", category:"Foundations & Philanthropy", confidence:"General only", status:"Outreach Sent", notes:"General org email. LinkedIn may be better route."},
+  {name:"Lucia Whalen", org:"Eleven Eleven Foundation", email:"info@eleveneleven.org", category:"Foundations & Philanthropy", confidence:"General only", status:"Outreach Sent", notes:"General org email. LinkedIn may be better route."},
+  {name:"Agnete Kirk Kristiansen", org:"LEGO Foundation", email:"info@legofoundation.com", category:"Foundations & Philanthropy", confidence:"General only", status:"Outreach Sent", notes:"Chair/Board member. General org email."},
+  {name:"Hilary Pennington", org:"LEGO Foundation", email:"info@legofoundation.com", category:"Foundations & Philanthropy", confidence:"General only", status:"Outreach Sent", notes:"Board member. General org email."},
+  {name:"Mads Hvitved Grand", org:"LEGO Foundation", email:"mads.hvitved.grand@legofoundation.com", category:"Foundations & Philanthropy", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Michele Jawando", org:"Omidyar Network", email:"mjawando@omidyar.com", category:"Impact Investors", confidence:"Inferred", status:"Outreach Sent", notes:"Inferred format: m***@omidyar.com."},
+  {name:"Daniel Wanjira", org:"Blue Haven Initiative", email:"daniel@bluehaveninitiative.com", category:"Impact Investors", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Jessica Matthews", org:"JP Morgan", email:"jessica.matthews@jpmorgan.com", category:"Impact Investors", confidence:"Inferred", status:"Bounced", notes:"Email bounced. Inferred format: j***@jpmorgan.com. Need alternate route."},
+  {name:"Pauline Koelbl", org:"ShEquity Partners", email:"info@shequity.com", category:"Impact Investors", confidence:"General only", status:"Outreach Sent", notes:"General org email. LinkedIn may be better route."},
+  {name:"Jamille Bigio", org:"Pivotal Ventures", email:"media@pivotalventures.org", category:"Impact Investors", confidence:"General only", status:"Outreach Sent", notes:"Senior Advisor. General org email."},
+  {name:"Ingrid-Gabriela Hoven", org:"GIZ", email:"unternehmenskommunikation@giz.de", category:"Bilateral/Government", confidence:"General only", status:"Outreach Sent", notes:"Managing Director. General org email."},
+  {name:"Jean Van Wetter", org:"Enabel", email:"jean.vanwetter@enabel.be", category:"Bilateral/Government", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Saliha Dobardzic", org:"Adaptation Fund", email:"sdobardzic@adaptation-fund.org", category:"Bilateral/Government", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Joe Cerrell", org:"Gates Foundation", email:"joe.cerrell@gatesfoundation.org", category:"Gates Foundation", confidence:"Inferred", status:"Outreach Sent", notes:"Inferred standard format."},
+  {name:"Brad Tytel", org:"Gates Foundation", email:"brad.tytel@gatesfoundation.org", category:"Gates Foundation", confidence:"Confirmed", status:"Outreach Sent", notes:"Confirmed email."},
+  {name:"Dane McQueen", org:"Gates Foundation", email:"dane.mcqueen@gatesfoundation.org", category:"Gates Foundation", confidence:"Inferred", status:"Outreach Sent", notes:"Inferred standard format."},
+  {name:"Dr. Shamma Al Mazrouei", org:"MBZ Foundation", email:"info@mohamedbinzayedfoundation.org", category:"MBZ Foundation", confidence:"General only", status:"Outreach Sent", notes:"General org email."},
+  {name:"Tej Nuthulaganti", org:"MBZ Foundation", email:"info@mohamedbinzayedfoundation.org", category:"MBZ Foundation", confidence:"General only", status:"Outreach Sent", notes:"General org email."},
+  {name:"Amran Haroon", org:"MBZ Foundation", email:"info@mohamedbinzayedfoundation.org", category:"MBZ Foundation", confidence:"General only", status:"Outreach Sent", notes:"General org email."},
+  {name:"Zeyad Abbasi", org:"MBZ Foundation", email:"info@mohamedbinzayedfoundation.org", category:"MBZ Foundation", confidence:"General only", status:"Outreach Sent", notes:"General org email."},
+  {name:"Marc Sépama", org:"Emerson Collective", email:"", category:"Philanthropy / Global Health", confidence:"LinkedIn only", status:"Call Held", notes:"Head of Advocacy & Strategic Comms, Global Health at Emerson Collective. Yale School of Public Health. Connected via CGI HAN. Call held 10/23. Focus is global health. No collaboration opportunity identified. No follow-up."}
+];
+
+// === PANEL ===
+function openPanel(title, fields) {
+  document.getElementById("panelTitle").textContent = title;
+  var html = "";
+  for (var i = 0; i < fields.length; i++) {
+    var val = fields[i].value;
+    if (val === undefined || val === null || String(val).trim() === "") continue;
+    val = String(val);
+    // Make URLs clickable
+    if (fields[i].key === "website" || fields[i].key === "appProcedures") {
+      val = val.replace(/(https?:\/\/[^\s;,|]+)/g, '<a href="$1" target="_blank" style="color:#2563eb;text-decoration:underline;">$1</a>');
+    }
+    // Status badge
+    if (fields[i].key === "status") {
+      val = '<span class="badge ' + badgeClass(val) + '">' + escapeHtml(val) + '</span>';
+    } else if (fields[i].key !== "website" && fields[i].key !== "appProcedures") {
+      val = escapeHtml(val);
+    }
+    html += '<div class="detail-field"><label>' + fields[i].label + '</label><div class="val">' + val + '</div></div>';
+  }
+  document.getElementById("panelBody").innerHTML = html;
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("detailPanel").classList.add("open");
+}
+
+function closePanel() {
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("detailPanel").classList.remove("open");
+}
+
+document.addEventListener("keydown", function(e) { if (e.key === "Escape") closePanel(); });
+
+// === RENDER ===
+var foundationsAndGrants = [].concat(grantApps, foundations);
+
+function renderKPIs() {
+  // --- Pipeline breakdown: Contacted vs Responded vs Not Yet Contacted ---
+  var contactedStatuses = ["Initial Outreach", "Follow-up Sent", "Follow-up Needed", "Awaiting Response",
+    "Application Submitted", "Under Review", "Deadline Approaching", "Contacted"];
+  var respondedStatuses = ["Response Received", "Responded", "Meeting Scheduled", "Meeting Confirmed",
+    "Meeting Completed", "Coordinating Meeting Time", "Active Partner"];
+  var closedStatuses = ["Declined", "Not Eligible", "Skip", "On Hold", "Dropped",
+    "Closed - Monitor Sept 2026", "No Current Opps - Monitor", "Missed Deadline", "Paused",
+    "Invitation Only", "Alternate Route Needed", "Closed - Monitor 2028", "Rejected - Geographic",
+    "Portal Closed"];
+
+  function isContacted(s) {
+    return contactedStatuses.some(function(cs) { return s.indexOf(cs) > -1; })
+      || s.indexOf("Warm") > -1 || s.indexOf("Submitted") > -1;
+  }
+  function isResponded(s) {
+    return respondedStatuses.some(function(rs) { return s.indexOf(rs) > -1; })
+      || s.indexOf("Responded") > -1 || s.indexOf("Warm") > -1;
+  }
+  function isProspect(s) { return s === "Prospect" || s.indexOf("Prospect") > -1; }
+
+var allEntries = [].concat(foundationsAndGrants, pbDonors, haitianPartners, strategicPartners, cgiContacts);
+  var outreachSent = allEntries.filter(function(e) { return isContacted(e.status) || isResponded(e.status); }).length;
+  var responses = allEntries.filter(function(e) { return isResponded(e.status); }).length;
+  var prospects = allEntries.filter(function(e) { return isProspect(e.status); }).length;
+
+  var grantsActive = grantApps.filter(function(g) { return g.status.indexOf("Submitted") > -1 || g.status === "Under Review" || g.status === "Re-applying" || g.status === "Awaiting Response" || g.status === "Almost Submitted" || g.status === "Deadline Approaching"; }).length;
+  var meetingsPending = haitianPartners.filter(function(h) { return h.status === "Meeting Scheduled" || h.status === "Coordinating Meeting Time" || h.status === "Meeting Confirmed"; }).length;
+  var totalInPipeline = allEntries.length;
+
+  var kpis = [
+    {num: outreachSent, label: "Outreach Sent", cls: "blue", action: "grants"},
+    {num: responses, label: "Responses", cls: "green", action: "haitian"},
+    {num: grantsActive, label: "Grants Active", cls: "purple", action: "grants"},
+    {num: meetingsPending, label: "Meetings Pending", cls: "teal", action: "haitian"},
+    {num: prospects, label: "Not Yet Contacted", cls: "orange", action: "grants"},
+    {num: totalInPipeline, label: "Total in Pipeline", cls: "red", action: "partners"}
+  ];
+
+  var html = "";
+  for (var i = 0; i < kpis.length; i++) {
+    html += '<div class="kpi ' + kpis[i].cls + '" onclick="kpiClick(\'' + kpis[i].action + '\')" title="Click to jump to section"><div class="num">' + kpis[i].num + '</div><div class="label">' + kpis[i].label + '</div></div>';
+  }
+  document.getElementById("kpiRow").innerHTML = html;
+}
+
+function kpiClick(sectionId) {
+  var body = document.getElementById(sectionId + "-body");
+  var toggle = document.getElementById(sectionId + "-toggle");
+  if (body && body.style.maxHeight === "0px") {
+    toggleSection(sectionId);
+  }
+  var el = document.getElementById(sectionId + "-toggle");
+  if (el) {
+    el.closest(".section").scrollIntoView({behavior: "smooth", block: "start"});
+    var sec = el.closest(".section");
+    sec.style.transition = "box-shadow 0.3s";
+    sec.style.boxShadow = "0 0 0 3px #2563eb";
+    setTimeout(function() { sec.style.boxShadow = ""; }, 1500);
+  }
+}
+
+function renderPipelineBar(containerId, data, stageField) {
+  var counts = {};
+  var order = [];
+  for (var i = 0; i < data.length; i++) {
+    var s = data[i][stageField];
+    if (!counts[s]) { counts[s] = 0; order.push(s); }
+    counts[s]++;
+  }
+  var total = data.length;
+  var bar = document.getElementById(containerId);
+  var html = "";
+  for (var j = 0; j < order.length; j++) {
+    var stage = order[j];
+    var pct = (counts[stage] / total * 100);
+    if (pct < 3) pct = 3;
+    html += '<div class="seg" style="width:' + pct + '%;background:' + getColor(stage) + '">';
+    html += '<span class="tip">' + stage + ': ' + counts[stage] + '</span>';
+    html += (pct > 5 ? counts[stage] : '');
+    html += '</div>';
+  }
+  bar.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderClickableTable(tableId, data, summaryColumns, panelFieldDefs) {
+  var table = document.getElementById(tableId);
+  var thead = table.querySelector("thead tr");
+  var tbody = table.querySelector("tbody");
+
+  var thHtml = "";
+  for (var i = 0; i < summaryColumns.length; i++) {
+    thHtml += "<th>" + summaryColumns[i].label + "</th>";
+  }
+  thead.innerHTML = thHtml;
+
+  var trHtml = "";
+  for (var r = 0; r < data.length; r++) {
+    trHtml += '<tr class="data-row" data-table="' + tableId + '" data-idx="' + r + '">';
+    for (var c = 0; c < summaryColumns.length; c++) {
+      var val = data[r][summaryColumns[c].key] || "-";
+      if (summaryColumns[c].key === "status") {
+        val = '<span class="badge ' + badgeClass(val) + '">' + escapeHtml(val) + '</span>';
+      } else {
+        val = escapeHtml(val);
+      }
+      trHtml += "<td>" + val + "</td>";
+    }
+    trHtml += "</tr>";
+  }
+  tbody.innerHTML = trHtml;
+
+  // Click handlers
+  var rows = tbody.querySelectorAll("tr.data-row");
+  for (var k = 0; k < rows.length; k++) {
+    rows[k].addEventListener("click", (function(idx, tId) {
+      return function() {
+        var d = dataMap[tId][idx];
+        var nameVal = d.name || d.contact || "Details";
+        var fields = [];
+        for (var f = 0; f < panelFieldDefs.length; f++) {
+          var fv = d[panelFieldDefs[f].key];
+          if (fv !== undefined && fv !== null && String(fv).trim() !== "") {
+            fields.push({key: panelFieldDefs[f].key, label: panelFieldDefs[f].label, value: fv});
+          }
+        }
+        openPanel(nameVal, fields);
+      };
+    })(r - data.length + (r - data.length + data.length), tableId));
+  }
+}
+
+// Store data references
+var dataMap = {};
+var sortState = {}; // tracks {tableId: {col: key, dir: "asc"|"desc"}}
+
+function renderRows(tableId) {
+  var data = dataMap[tableId];
+  var summaryColumns = dataMap[tableId + "_cols"];
+  var tbody = document.getElementById(tableId).querySelector("tbody");
+
+  // Sort if active
+  var ss = sortState[tableId];
+  var sorted = data.slice(); // copy
+  if (ss) {
+    sorted.sort(function(a, b) {
+      var va = (a[ss.col] || "").toLowerCase();
+      var vb = (b[ss.col] || "").toLowerCase();
+      if (va < vb) return ss.dir === "asc" ? -1 : 1;
+      if (va > vb) return ss.dir === "asc" ? 1 : -1;
+      return 0;
+    });
+  }
+  dataMap[tableId + "_sorted"] = sorted;
+
+  var trHtml = "";
+  for (var r = 0; r < sorted.length; r++) {
+    trHtml += '<tr class="data-row" onclick="rowClick(\'' + tableId + '\',' + r + ')">';
+    for (var c = 0; c < summaryColumns.length; c++) {
+      var val = sorted[r][summaryColumns[c].key] || "-";
+      if (summaryColumns[c].key === "status") {
+        val = '<span class="badge ' + badgeClass(val) + '">' + escapeHtml(val) + '</span>';
+      } else {
+        val = escapeHtml(val);
+      }
+      trHtml += "<td>" + val + "</td>";
+    }
+    trHtml += "</tr>";
+  }
+  tbody.innerHTML = trHtml;
+
+  // Update sort arrows
+  var ths = document.getElementById(tableId).querySelectorAll("th .sort-arrow");
+  for (var i = 0; i < ths.length; i++) {
+    ths[i].className = "sort-arrow";
+    ths[i].textContent = "▴▾";
+  }
+  if (ss) {
+    var colIdx = -1;
+    for (var j = 0; j < summaryColumns.length; j++) {
+      if (summaryColumns[j].key === ss.col) { colIdx = j; break; }
+    }
+    if (colIdx >= 0) {
+      var arrow = document.getElementById(tableId).querySelectorAll("th .sort-arrow")[colIdx];
+      if (arrow) {
+        arrow.className = "sort-arrow active";
+        arrow.textContent = ss.dir === "asc" ? "▴" : "▾";
+      }
+    }
+  }
+}
+
+function sortTable(tableId, colKey) {
+  var ss = sortState[tableId];
+  if (ss && ss.col === colKey) {
+    ss.dir = ss.dir === "asc" ? "desc" : "asc";
+  } else {
+    sortState[tableId] = {col: colKey, dir: "asc"};
+  }
+  renderRows(tableId);
+}
+
+function buildTable(tableId, data, summaryColumns, panelFieldDefs) {
+  dataMap[tableId] = data;
+  dataMap[tableId + "_cols"] = summaryColumns;
+  dataMap[tableId + "_fields"] = panelFieldDefs;
+  dataMap[tableId + "_sorted"] = data.slice();
+
+  var table = document.getElementById(tableId);
+  var thead = table.querySelector("thead tr");
+
+  var thHtml = "";
+  for (var i = 0; i < summaryColumns.length; i++) {
+    thHtml += '<th onclick="sortTable(\'' + tableId + '\',\'' + summaryColumns[i].key + '\')">'
+      + summaryColumns[i].label
+      + ' <span class="sort-arrow">▴▾</span></th>';
+  }
+  thead.innerHTML = thHtml;
+
+  renderRows(tableId);
+}
+
+function rowClick(tableId, idx) {
+  var sorted = dataMap[tableId + "_sorted"] || dataMap[tableId];
+  var d = sorted[idx];
+  var panelFieldDefs = dataMap[tableId + "_fields"];
+  var nameVal = d.name || "Details";
+  var fields = [];
+  for (var f = 0; f < panelFieldDefs.length; f++) {
+    var fv = d[panelFieldDefs[f].key];
+    if (fv !== undefined && fv !== null && String(fv).trim() !== "") {
+      fields.push({key: panelFieldDefs[f].key, label: panelFieldDefs[f].label, value: fv});
+    }
+  }
+  openPanel(nameVal, fields);
+}
+
+function toggleSection(id) {
+  var body = document.getElementById(id + "-body");
+  var toggle = document.getElementById(id + "-toggle");
+  body.classList.toggle("closed");
+  toggle.classList.toggle("open");
+}
+
+// Render everything
+renderKPIs();
+
+document.getElementById("partners-count").textContent = strategicPartners.length;
+buildTable("partnersTable", strategicPartners,
+  [{key:"name", label:"Organization"}, {key:"contact", label:"Contact"}, {key:"status", label:"Status"}],
+  [{key:"name", label:"Organization"}, {key:"contact", label:"Contact"}, {key:"status", label:"Status"}, {key:"description", label:"Notes"}]
+);
+
+document.getElementById("grants-count").textContent = foundationsAndGrants.length;
+renderPipelineBar("grantBar", foundationsAndGrants, "status");
+buildTable("grantTable", foundationsAndGrants,
+  [{key:"name", label:"Organization"}, {key:"status", label:"Status"}, {key:"ask", label:"Ask Range"}],
+  [{key:"name", label:"Organization"}, {key:"status", label:"Status"}, {key:"ask", label:"Ask Range"}, {key:"submitted", label:"Submitted"}, {key:"website", label:"Website"}, {key:"focus", label:"Focus Area"}, {key:"tier", label:"Tier"}, {key:"description", label:"Description"}, {key:"grantReqs", label:"Grant Requirements"}, {key:"appProcedures", label:"Application Procedures"}, {key:"responseNotes", label:"Response / Notes"}, {key:"followUp", label:"Follow-up Action"}]
+);
+
+document.getElementById("pb-count").textContent = pbDonors.length;
+renderPipelineBar("pbBar", pbDonors, "status");
+buildTable("pbTable", pbDonors,
+  [{key:"name", label:"Name"}, {key:"tier", label:"Tier"}, {key:"status", label:"Status"}],
+  [{key:"name", label:"Name"}, {key:"tier", label:"Tier"}, {key:"status", label:"Status"}, {key:"notes", label:"Notes"}]
+);
+
+// Private Foundations merged into Foundations & Grants section above
+
+document.getElementById("haitian-count").textContent = haitianPartners.length;
+renderPipelineBar("haitianBar", haitianPartners, "status");
+buildTable("haitianTable", haitianPartners,
+  [{key:"name", label:"Partner"}, {key:"location", label:"Location"}, {key:"status", label:"Status"}, {key:"type", label:"Type"}],
+  [{key:"name", label:"Partner"}, {key:"location", label:"Location"}, {key:"status", label:"Status"}, {key:"type", label:"Type"}, {key:"website", label:"Website"}, {key:"description", label:"Description"}, {key:"responseNotes", label:"Response / Notes"}, {key:"followUp", label:"Follow-up Action"}]
+);
+
+document.getElementById("cgi-count").textContent = cgiContacts.length;
+renderPipelineBar("cgiBar", cgiContacts, "status");
+buildTable("cgiTable", cgiContacts,
+  [{key:"name", label:"Name"}, {key:"org", label:"Organization"}, {key:"email", label:"Email"}, {key:"status", label:"Status"}],
+  [{key:"name", label:"Name"}, {key:"org", label:"Organization"}, {key:"email", label:"Email"}, {key:"category", label:"Category"}, {key:"confidence", label:"Email Confidence"}, {key:"status", label:"Status"}, {key:"notes", label:"Notes"}]
+);
+</script>
+</body>
+</html>
